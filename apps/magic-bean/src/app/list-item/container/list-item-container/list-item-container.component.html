@@ -1,0 +1,7 @@
+<ng-container *ngIf="(todoItems$ | async) as todoItems; else noTodoItems">
+	<app-list-item [todoItems]="todoItems"
+						(action)="onListItemAction($event)"></app-list-item>
+</ng-container>
+<ng-template #noTodoItems>
+	No Todo-Items fetched
+</ng-template>

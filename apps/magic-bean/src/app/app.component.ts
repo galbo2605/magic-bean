@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Message } from '@magic-bean/api-interfaces';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'magic-bean-root',
@@ -9,5 +10,9 @@ import { Message } from '@magic-bean/api-interfaces';
 })
 export class AppComponent {
   hello$ = this.http.get<Message>('/api/hello');
+  showNav = true;
+
+  imageItems: Observable<any[]>;
+
   constructor(private http: HttpClient) {}
 }

@@ -1,0 +1,61 @@
+:host {
+	width: 100%;
+	height: calc(100% - 100px);
+}
+
+mat-action-list {
+	max-width: 60rem;
+	margin: 0 auto;
+	display: flex;
+	flex-direction: row-reverse;
+}
+
+mat-selection-list, mat-list {
+	max-width: 60rem;
+	margin: 0 auto;
+}
+
+mat-form-field {
+	width: 100%;
+}
+
+:host::ng-deep .mat-list-base .mat-list-item .mat-list-text, .mat-list-base .mat-list-option .mat-list-text {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-direction: row;
+}
+
+:host::ng-deep .mat-list-base .mat-list-item .mat-list-item-content {
+	flex-direction: row-reverse;
+}
+
+.form-container {
+	padding: 1rem;
+}
+
+.option-buttons {
+	display: flex;
+}
+
+.save-item, .cancel-item {
+	width: 63px !important;
+	background: lightblue;
+}
+
+.delete-item {
+	background: lightpink;
+}
+
+.edit-item {
+	background: lightgreen;
+}
+
+.edit-item, .delete-item {
+	display: none;
+	width: 63px;
+}
+
+.mat-list-option:hover .edit-item, .mat-list-option:hover .delete-item {
+	display: block;
+}

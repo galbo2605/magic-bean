@@ -1,8 +1,44 @@
-<div style="text-align:center">
-  <h1>Welcome to magic-bean!</h1>
-  <img
-    width="450"
-    src="https://raw.githubusercontent.com/nrwl/nx/master/nx-logo.png"
-  />
-</div>
-<div>Message: {{ hello$ | async | json }}</div>
+<header>
+	<button (click)="showNav = !showNav"
+			  class="material-icons">
+		{{ showNav ? 'close' : 'menu' }}
+	</button>
+
+	<!--
+	  The unusual handling of showNav ensures that the nav animations are only
+	  triggered at the appropriate points.
+	-->
+	<a routerLink="/"
+		(click)="showNav = showNav ? false : showNav">
+		<h1>Todo App</h1>
+	</a>
+</header>
+
+<nav (click)="showNav = false"
+	  [class.showNav]="showNav"
+	  [class.hideNav]="showNav === false">
+	<a routerLink="/">
+		Home
+	</a>
+
+	<a routerLink="/resources">
+		Resources
+	</a>
+
+	<a routerLink="/about">
+		About
+	</a>
+
+</nav>
+
+<main>
+
+	<router-outlet></router-outlet>
+
+</main>
+
+<footer>
+
+	running on Angular (8 with Material) + NestJS (Express + Socket-IO)
+
+</footer>

@@ -1,0 +1,55 @@
+<form class="form-container"
+		[formGroup]="formGroup">
+	<button mat-button
+			  class="save-item"
+			  type="button"
+			  (click)="onAdd()">Add</button>
+	<ng-container *ngFor="let todoItem of todoItems; index as index">
+		<ng-container [ngSwitch]="todoItem.mode">
+			<ng-container *ngSwitchCase="'read'">
+				<mat-selection-list>
+					<mat-list-option #option
+										  [selected]="todoItem.checked"
+										  (click)="onSelection(option, todoItem)">
+						{{todoItem.value}}
+						<div class="option-buttons">
+							<button mat-button
+									  class="edit-item"
+									  type="button"
+									  role="option"
+									  (click)="onEdit(todoItem)">Edit</button>
+							<button mat-button
+									  class="delete-item"
+									  role="option"
+									  type="button"
+									  (click)="onDelete(todoItem)">Delete</button>
+						</div>
+					</mat-list-option>
+				</mat-selection-list>
+			</ng-container>
+			<ng-container *ngSwitchCase="'update'">
+				<mat-list>
+					<mat-list-item>
+						<button mat-button
+								  class="cancel-item"
+								  type="button"
+								  (click)="onCancel(todoItem)">Close</button>
+						<mat-form-field>
+							<input matInput
+									 #itemRef
+									 maxlength="100"
+									 [placeholder]="'Item ' + (index + 1)"
+									 [formControlName]="todoItem.id"
+									 [value]="todoItem.value"
+									 (input)="onInput(todoItem.id)">
+							<mat-hint align="end">{{itemRef.value.length}} / 100</mat-hint>
+						</mat-form-field>
+					</mat-list-item>
+				</mat-list>
+			</ng-container>
+			<ng-container *ngSwitchDefault>
+				something is wrong...
+			</ng-container>
+		</ng-container>
+	</ng-container>
+</form>
