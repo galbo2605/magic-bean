@@ -19,6 +19,7 @@ export class ListItemContainerComponent implements OnInit, OnDestroy {
 	constructor(private listItemAPISVC: ListItemApiService) { }
 
 	ngOnInit(): void {
+		this.listItemAPISVC.initSocket();
 		this.todoItems$ = this.listItemAPISVC.socketState$.asObservable();
 	}
 

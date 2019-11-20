@@ -7,11 +7,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
-import { MatGridListModule, MatInputModule, MatListModule, MatButtonModule } from '@angular/material';
+import { SharedModule } from './shared/core/shared.module';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
 	declarations: [
-		AppComponent
+		AppComponent,
+		TestComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -19,10 +21,7 @@ import { MatGridListModule, MatInputModule, MatListModule, MatButtonModule } fro
 		HttpClientModule,
 		ReactiveFormsModule,
 		AppRoutingModule,
-		MatInputModule,
-		MatGridListModule,
-		MatListModule,
-		MatButtonModule
+		SharedModule
 	],
 	providers: [],
 	bootstrap: [AppComponent]

@@ -1,0 +1,17 @@
+<table mat-table
+		 [dataSource]="dataSource">
+
+	<!-- Position Column -->
+	<ng-container *ngFor="let col of columns"
+					  [matColumnDef]="col.id">
+		<th mat-header-cell
+			 *matHeaderCellDef> {{col.name}} </th>
+		<td mat-cell
+			 *matCellDef="let element"> {{element[col.id]}} </td>
+	</ng-container>
+
+	<tr mat-header-row
+		 *matHeaderRowDef="columnIDs; sticky: true"></tr>
+	<tr mat-row
+		 *matRowDef="let row; columns: columnIDs;"></tr>
+</table>

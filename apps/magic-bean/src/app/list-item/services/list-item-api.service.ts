@@ -17,11 +17,6 @@ export class ListItemApiService {
 	private todoItems: ITodoItem[];
 	public socketState$ = new Subject<ITodoItem[]>();
 
-	constructor() {
-		this.initSocket();
-		this.socket.connect();
-	}
-
 	private baseURI(): string {
 		const protocol = 'http';
 		const host = environment.host;
@@ -29,8 +24,9 @@ export class ListItemApiService {
 		return `${protocol}://${host}:${port}`;
 	}
 
-	private initSocket(): void {
+	initSocket(): void {
 		this.socket = io(this.socketIOURL);
+		this.socket.connect();
 		this.socket.on('connect', () => {
 			console.log('CONNECTED!');
 		});

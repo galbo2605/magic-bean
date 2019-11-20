@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { TestComponent } from './test/test.component';
 
 const routes: Routes = [
-	{ path: '', loadChildren: () => import('./list-item/core/list-item.module').then(m => m.ListItemModule) }
+	{ path: '', component: TestComponent },
+	{ path: 'todo', loadChildren: () => import('./list-item/core/list-item.module').then(m => m.ListItemModule) }
 ];
 
 @NgModule({

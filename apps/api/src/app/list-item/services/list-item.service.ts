@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TodoItemEntity } from '@magic-bean/api-interfaces';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { ITodoItem } from '../interface/todoi-item.interface';
 
 @Injectable()
 export class ListItemService {
@@ -14,14 +15,14 @@ export class ListItemService {
 		return await this.listItemRepository.find();
 	}
 
-	async create(todoItem: TodoItemEntity): Promise<TodoItemEntity> {
-		const newTodoItem = new TodoItemEntity();
+	async create(todoItem: ITodoItem): Promise<TodoItemEntity> {
+		const newTodoItem: any = new TodoItemEntity();
 		this.setTodoValues(newTodoItem, todoItem);
 		return await this.listItemRepository.save(newTodoItem);
 	}
 
-	async update(todoItem: TodoItemEntity): Promise<TodoItemEntity> {
-		const foundTodoItem = await this.listItemRepository.findOne(todoItem.id);
+	async update(todoItem: ITodoItem): Promise<TodoItemEntity> {
+		const foundTodoItem: any = await this.listItemRepository.findOne(todoItem.id);
 		this.setTodoValues(foundTodoItem, todoItem);
 		return await this.listItemRepository.save(foundTodoItem);
 	}
@@ -30,7 +31,7 @@ export class ListItemService {
 		await this.listItemRepository.delete(todoItemID);
 	}
 
-	private setTodoValues(newTodoItem: TodoItemEntity, cahngedTodoItem: TodoItemEntity) {
+	private setTodoValues(newTodoItem: ITodoItem, cahngedTodoItem: ITodoItem) {
 		newTodoItem.value = cahngedTodoItem.value;
 		newTodoItem.checked = cahngedTodoItem.checked;
 		newTodoItem.mode = cahngedTodoItem.mode;
