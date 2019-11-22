@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { IColumns } from '../shared/interfaces/column.interface';
+import { ApiRequestService } from '../shared/services/api-request.service';
+import { IRequest } from '../shared/interfaces/request.interface';
+import { EMethod } from '../shared/enums/method.enum.';
+import { Observable } from 'rxjs';
 
 @Component({
 	selector: 'magic-bean-test',
@@ -7,27 +11,22 @@ import { IColumns } from '../shared/interfaces/column.interface';
 	styleUrls: ['./test.component.scss']
 })
 export class TestComponent implements OnInit {
-	columns: IColumns[] = [
-		{ id: 'position', name: 'No.', },
-		{ id: 'name', name: 'Name', },
-		{ id: 'weight', name: 'Weight', },
-		{ id: 'symbol', name: 'Symbol' }
-	];
-	dataSource = [
-		{ position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-		{ position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-		{ position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-		{ position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-		{ position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-		{ position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-		{ position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-		{ position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-		{ position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-		{ position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-	];
-	constructor() { }
+	columns$: Observable<IColumns[]>;
+
+	dataSource$: any;
+	constructor(private apiReqSVC: ApiRequestService) { }
 
 	ngOnInit() {
+		const colRequest: IRequest = {
+			path: 'cols',
+			method: EMethod.GET
+		};
+		this.columns$ = this.apiReqSVC.request(colRequest);
+		const dataRequest: IRequest = {
+			path: 'data',
+			method: EMethod.GET
+		};
+		this.dataSource$ = this.apiReqSVC.request(dataRequest);
 	}
 
 }
