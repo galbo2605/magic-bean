@@ -4,4 +4,6 @@ export interface IColumns {
 	type?: string;
 	sorting?: 'ASC' | 'DESC';
 	filters?: any;
+	visible?: boolean;
+	order?: number;
 }

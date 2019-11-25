@@ -1,0 +1,50 @@
+<mat-form-field [hintLabel]="hintLabel">
+	<!-- TYPE SWITCH-CASES -->
+	<ng-container [ngSwitch]="type">
+		<!-- NUMBER -->
+		<ng-container *ngSwitchCase="fieldType.NUMBER">
+			<input matInput
+					 #number
+					 [type]="type"
+					 [min]="min"
+					 [max]="max"
+					 [formControlName]="controlName"
+					 [placeholder]="placeholder"
+					 [required]="required">
+		</ng-container>
+		<!-- TEXT -->
+		<ng-container *ngSwitchCase="fieldType.TEXT">
+			<input matInput
+					 #text
+					 [type]="type"
+					 [minlength]="min"
+					 [maxlength]="max"
+					 [formControlName]="controlName"
+					 [placeholder]="placeholder"
+					 [required]="required">
+		</ng-container>
+		<!-- TEXT -->
+		<ng-container *ngSwitchCase="fieldType.EMAIL">
+			<input matInput
+					 #email
+					 [type]="type"
+					 [minlength]="min"
+					 [maxlength]="max"
+					 [formControlName]="controlName"
+					 [placeholder]="placeholder"
+					 [required]="required">
+		</ng-container>
+		<!-- DROPDOWN -->
+		<ng-container *ngSwitchCase="fieldType.DROPDOWN">
+			<mat-select #dropdown
+							[placeholder]="placeholder"
+							[formControlName]="controlName"
+							[required]="required">
+				<mat-option *ngFor="let option of options"
+								[value]="option">{{option}}</mat-option>
+			</mat-select>
+		</ng-container>
+	</ng-container>
+	<mat-hint align="end">{{getHint()}}</mat-hint>
+	<mat-error *ngIf="control?.invalid">{{getErrorMessage()}}</mat-error>
+</mat-form-field>

@@ -7,11 +7,9 @@ import { environment } from '../environments/environment';
 export class RequestInterceptor implements HttpInterceptor {
 	constructor() { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-		console.log(request);
 		const newRequest = request.clone({
 			url: `${environment.host}${request.url}`
 		});
-		console.log(newRequest);
 		return next.handle(newRequest);
 	}
 }

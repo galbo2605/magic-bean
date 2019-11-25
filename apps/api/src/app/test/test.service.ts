@@ -1,17 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { Message } from '@magic-bean/api-interfaces';
+import { Message, AmazonClothingItemEntity } from '@magic-bean/api-interfaces';
 
 @Injectable()
 export class TestService {
 	getCols(): any[] {
-		return [
-			{ id: 'position', name: 'No.', },
-			{ id: 'name', name: 'Name', },
-			{ id: 'weight', name: 'Weight', },
-			{ id: 'symbol', name: 'Symbol' }
-		];
+		const cols: { id: string, name: string }[] = [];
+		const keys = Object.getOwnPropertyNames(new AmazonClothingItemEntity());
+		keys.forEach(key => {
+			const id = key;
+			const name = key.split('_').join(' ');
+			cols.push({ id, name });
+		});
+		return cols;
 	}
-	
+
 	getData(): any[] {
 		return [
 			{ position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
@@ -25,5 +27,20 @@ export class TestService {
 			{ position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
 			{ position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
 		];
+	}
+}
+
+class Describer {
+	private static FRegEx = new RegExp(/(?:this\.)(.+?(?= ))/g);
+	static describe(val: any, parent = false): string[] {
+		let result = [];
+		if (parent) {
+			const proto = Object.getPrototypeOf(val.prototype);
+			if (proto) {
+				result = result.concat(this.describe(proto.constructor, parent));
+			}
+		}
+		result = result.concat(val.toString().match(this.FRegEx) || []);
+		return result;
 	}
 }

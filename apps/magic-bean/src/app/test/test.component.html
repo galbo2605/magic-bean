@@ -1,3 +1,11 @@
-<p>test works!</p>
-<magic-bean-table [columns]="columns$ | async"
-						[dataSource]="dataSource$ | async"></magic-bean-table>
+<div class="test-header">
+	<p class="test-p">test works!</p>
+	<magic-bean-button class="form-dialog"
+							 (btnClick)="actions($event)"
+							 label="Form Dialog"></magic-bean-button>
+</div>
+<magic-bean-table class="test-table"
+						[columns]="columns$ | async"
+						[dataSource]="dataSource$ | async"
+						style="width: 100%;"
+						(action)="actions($event)"></magic-bean-table>

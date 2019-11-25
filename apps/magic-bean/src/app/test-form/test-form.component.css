@@ -1,0 +1,35 @@
+.mat-card {
+	display: grid;
+	grid-template-areas: 
+	"mat-card-header"
+	"img"
+	"mat-card-content"
+	"mat-card-actions";
+	min-height: calc(100% - 32px);
+}
+
+.mat-card-image {
+	max-width: 300px;
+	max-height: 300px;
+	justify-self: center;
+}
+
+.mat-card-actions {
+	justify-self: center;
+	align-self: center;
+}
+
+.custom-avatar {
+	background-image: url(../../favicon.ico);
+	background-size: cover;
+}
+
+.form-grid {
+	display: grid;
+	grid-gap: 1rem;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
+
+.field-grid {
+	display: grid;
+}

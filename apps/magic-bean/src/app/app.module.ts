@@ -10,11 +10,13 @@ import { AppComponent } from './app.component';
 import { SharedModule } from './shared/core/shared.module';
 import { TestComponent } from './test/test.component';
 import { RequestInterceptor } from './request.interceptor';
+import { TestFormComponent } from './test-form/test-form.component';
 
 @NgModule({
 	declarations: [
 		AppComponent,
 		TestComponent,
+		TestFormComponent,
 	],
 	imports: [
 		BrowserModule,
@@ -27,6 +29,7 @@ import { RequestInterceptor } from './request.interceptor';
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }
 	],
+	entryComponents: [TestFormComponent],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

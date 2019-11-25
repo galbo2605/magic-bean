@@ -1,3 +1,17 @@
 :host {
   width: 100%;
+  display: grid;
+  grid-template-areas:
+    'testHeaderArea'
+    'testTableArea';
+  justify-items: center;
+}
+
+.test-header {
+  grid-area: testHeaderArea;
+}
+
+.test-table {
+  grid-area: testTableArea;
+  grid-row: span 9;
 }

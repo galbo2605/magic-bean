@@ -10,6 +10,7 @@ import { ormConfig } from './db/typeorm.config';
 import { AppController } from './app.controller';
 import { eDistPath } from './enum/dist-path.enum';
 import { TestModule } from './test/test.module';
+import { AmazonClothingItemModule } from './amazon-clothing-item/amazon-clothing-item.module';
 
 @Module({
 	imports: [
@@ -18,7 +19,8 @@ import { TestModule } from './test/test.module';
 			rootPath: join(__dirname, eDistPath.DistPath),
 		}),
 		ListItemModule,
-		TestModule
+		TestModule,
+		AmazonClothingItemModule,
 	],
 	controllers: [
 		AppController,
