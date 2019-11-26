@@ -1,41 +1,45 @@
-<mat-card>
-	<mat-card-header>
-		<div mat-card-avatar
-			  class="custom-avatar">A</div>
-		<mat-card-title>{{formGroup?.controls?.Title?.value}}</mat-card-title>
-		<mat-card-subtitle>{{formGroup?.controls?.Price?.value}}</mat-card-subtitle>
-	</mat-card-header>
-	<img mat-card-image
-		  [src]="formGroup?.controls?.Main_Image?.value">
-	<!-- <img mat-card-image
+<form [formGroup]="formGroup">
+	<mat-card>
+		<mat-card-header>
+			<div mat-card-avatar
+				  class="custom-avatar">A</div>
+			<mat-card-title>{{formGroup?.controls?.Title?.value}}</mat-card-title>
+			<mat-card-subtitle>{{formGroup?.controls?.Price?.value}}</mat-card-subtitle>
+		</mat-card-header>
+		<img *ngIf="formGroup?.controls?.Main_Image?.value as mainImage"
+			  mat-card-image
+			  [src]="mainImage">
+		<!-- <img mat-card-image
 		  [src]="formGroup?.controls?.Image2?.value">
 	<img mat-card-image
 		  [src]="formGroup?.controls?.Image3?.value">
 	<img mat-card-image
 		  [src]="formGroup?.controls?.Image4?.value"> -->
-	<mat-card-content>
-		<form [formGroup]="formGroup"
-				class="form-grid">
-			<magic-bean-form-field *ngFor="let field of fields"
-										  class="field-grid"
-										  [form]="formGroup"
-										  [type]="field.type"
-										  [controlName]="field.controlName"
-										  [placeholder]="field.placeholder"
-										  [required]="field.required"
-										  [min]="field.min"
-										  [max]="field.max"
-										  [hintLabel]="field.hintLabel"
-										  [value]="field.value"
-										  [disabled]="field.disabled"
-										  [options]="field.options"></magic-bean-form-field>
-		</form>
-	</mat-card-content>
-	<mat-card-actions>
-		<button mat-flat-button
-				  color="primary"
-				  (click)="onSave()">Save</button>
-		<button mat-flat-button
-				  (click)="onClose()">Close</button>
-	</mat-card-actions>
-</mat-card>
+		<mat-card-content>
+			<section class="form-grid">
+				<magic-bean-form-field *ngFor="let field of fields"
+											  class="field-grid"
+											  [form]="formGroup"
+											  [type]="field.type"
+											  [controlName]="field.controlName"
+											  [placeholder]="field.placeholder"
+											  [required]="field.required"
+											  [min]="field.min"
+											  [max]="field.max"
+											  [hintLabel]="field.hintLabel"
+											  [value]="data[field.controlName]"
+											  [disabled]="field.disabled"
+											  [options]="field.options"></magic-bean-form-field>
+			</section>
+		</mat-card-content>
+		<mat-card-actions>
+			<button mat-flat-button
+					  type="submit"
+					  color="primary"
+					  [disabled]="formGroup.invalid || formGroup.untouched || formGroup.pristine"
+					  (click)="onSave()">Save</button>
+			<button mat-flat-button
+					  (click)="onClose()">Close</button>
+		</mat-card-actions>
+	</mat-card>
+</form>

@@ -25,7 +25,7 @@ export class TestFormComponent implements OnInit {
 
 	onSave() {
 		console.log(this.formGroup);
-		this.data = this.formGroup.getRawValue();
+		this.data = { ...this.data, ...this.formGroup.getRawValue() };
 		this.dialogRef.close({ type: 'save', payload: this.data })
 	}
 
@@ -70,11 +70,11 @@ export const clothingFields: IField[] = [
 	},
 	{
 		type: EFieldType.NUMBER, controlName: 'Days_Till_Ready', placeholder: 'Enter your Fulfillment',
-		hintLabel: 'Days till ready for delivery', value: 14.99,
+		hintLabel: 'Days till ready for delivery', value: 3,
 		required: true, min: 0, max: 90
 	},
 	{
-		type: EFieldType.TEXT, controlName: 'Quantity', placeholder: 'Enter your Quantity',
+		type: EFieldType.NUMBER, controlName: 'Quantity', placeholder: 'Enter your Quantity',
 		hintLabel: 'Number of items available', value: 100,
 		required: true, min: 0, max: 100
 	},
@@ -188,13 +188,13 @@ export const clothingFields: IField[] = [
 		type: EFieldType.DROPDOWN, controlName: 'Size', placeholder: `Choose your Size`,
 		hintLabel: `Size of your item`, value: '',
 		required: false,
-		options: ['S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']
+		options: ['', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']
 	},
 	{
 		type: EFieldType.DROPDOWN, controlName: 'Size_Map', placeholder: `Choose your Size Map`,
 		hintLabel: `Size map of your item`, value: '',
 		required: false,
-		options: ['Small', 'Medium', 'Large', 'X-Large', 'XX-Large', 'XXX-Large', 'XXXX-Large']
+		options: ['', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large', 'XXX-Large', 'XXXX-Large']
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Shipping_Template', placeholder: `Enter your Shipping-Template's name`,

@@ -6,6 +6,20 @@
 </div>
 <magic-bean-table class="test-table"
 						[columns]="columns$ | async"
+						[colRequest]="colRequest"
 						[dataSource]="dataSource$ | async"
-						style="width: 100%;"
-						(action)="actions($event)"></magic-bean-table>
+						[dataRequest]="dataRequest"
+						[count]="dataCount$ | async"
+						[actionItems]="actionItems"
+						(action)="actions($event)">
+	<ng-template #expandableContent
+					 let-row>
+		<!-- <div class="expandable-content">expandable content {{row | json}}</div> -->
+		<magic-bean-table class="test-table"
+								[colRequest]="colRequest"
+								[dataRequest]="dataRequest"
+								[actionItems]="actionItems"
+								(action)="actions($event)"></magic-bean-table>
+	</ng-template>
+
+</magic-bean-table>

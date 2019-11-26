@@ -1,4 +1,4 @@
-import { Entity, Column, ObjectIdColumn, ObjectID } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, ObjectID, BeforeInsert, BeforeUpdate } from 'typeorm';
 
 @Entity()
 export class AmazonClothingItemEntity {
@@ -98,4 +98,22 @@ export class AmazonClothingItemEntity {
 
 	@Column()
 	Shipping_Template: string = null;
+
+	@Column()
+	First_Created: Date = null;
+
+	@Column()
+	Last_Updated: Date = null;
+
+	@BeforeInsert()
+	setDefaultValue() {
+		const newDate = new Date();
+		this.First_Created = newDate;
+		this.Last_Updated = newDate;
+	}
+
+	@BeforeUpdate()
+	updateDefaultValues() {
+		this.Last_Updated = new Date();
+	}
 }

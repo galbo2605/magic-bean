@@ -1,17 +1,41 @@
 import { Injectable } from '@nestjs/common';
 import { AmazonClothingItemEntity, IAmazonClothingItem } from '@magic-bean/api-interfaces';
-import { Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class AmazonClothingItemService {
 	constructor(
 		@InjectRepository(AmazonClothingItemEntity)
-		private readonly amazonClothingItemRepository: Repository<AmazonClothingItemEntity>,
+		private readonly amazonClothingItemRepository: MongoRepository<AmazonClothingItemEntity>,
 	) { }
+	getCols() {
+		const cols: { id: string, name: string }[] = [];
+		const keys = Object.getOwnPropertyNames(new AmazonClothingItemEntity());
+		keys.forEach(key => {
+			const id = key;
+			const name = key.split('_').join(' ');
+			cols.push({ id, name });
+		});
+		return cols;
+	}
 
-	async findAll(): Promise<[AmazonClothingItemEntity[], number]> {
-		return await this.amazonClothingItemRepository.findAndCount();
+	async findAll(column: string = 'Created_At', direction: 'asc' | 'desc' = 'desc', page: number = 0, search: string = ''): Promise<[AmazonClothingItemEntity[], number]> {
+		const cols = this.getCols();
+		const $or = cols.reduce((acc, item) => {
+			acc.push({ [item.id]: { $regex: search } });
+			return acc;
+		}, []);
+		return await this.amazonClothingItemRepository.findAndCount({
+			order: {
+				[column]: direction.toLocaleUpperCase()
+			},
+			take: 5,
+			skip: page * 5,
+			where: {
+				$or
+			},
+		});
 	}
 
 	async create(amazonClothingItem: IAmazonClothingItem): Promise<AmazonClothingItemEntity> {
@@ -22,18 +46,20 @@ export class AmazonClothingItemService {
 		}
 	}
 
-	async update(amazonClothingItem: IAmazonClothingItem): Promise<AmazonClothingItemEntity> {
-		const foundAmazonClothingItem: any = await this.amazonClothingItemRepository.findOne(amazonClothingItem.UID);
-		this.setTodoValues(foundAmazonClothingItem, amazonClothingItem);
-		return await this.amazonClothingItemRepository.save(foundAmazonClothingItem);
+	async update(amazonClothingItem: AmazonClothingItemEntity): Promise<AmazonClothingItemEntity> {
+		const foundOne = await this.amazonClothingItemRepository.findOne(amazonClothingItem.UID);
+		for (const key in foundOne) {
+			if (foundOne.hasOwnProperty(key)) {
+				if (key !== 'UID') {
+					foundOne[key] = amazonClothingItem[key];
+				}
+			}
+		}
+		return await this.amazonClothingItemRepository.save(foundOne);
 	}
 
 	async delete(amazonClothingItemID: string): Promise<void> {
 		await this.amazonClothingItemRepository.delete(amazonClothingItemID);
-	}
-
-	private setTodoValues(newAmazonClothingItem: IAmazonClothingItem, changedAmazonClothingItem: IAmazonClothingItem) {
-		newAmazonClothingItem = { ...changedAmazonClothingItem };
 	}
 
 }

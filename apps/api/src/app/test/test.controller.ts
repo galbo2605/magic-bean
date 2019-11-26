@@ -10,9 +10,4 @@ export class TestController {
 	getCols(): any[] {
 		return this.testService.getCols();
 	}
-	
-	@Get('data')
-	getData(): any[] {
-		return this.testService.getData();
-	}
 }

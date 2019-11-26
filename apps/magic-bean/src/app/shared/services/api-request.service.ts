@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { IRequest } from '../interfaces/request.interface';
 import { HttpClient } from '@angular/common/http';
@@ -47,7 +47,7 @@ export class ApiRequestService {
 
 	private handleError(error: any): Observable<any> {
 		console.log(error);
-		return null;
+		return of(null);
 	}
 
 }
