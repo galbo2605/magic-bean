@@ -20,7 +20,7 @@ export class AmazonClothingItemService {
 		return cols;
 	}
 
-	async findAll(column: string = 'Created_At', direction: 'asc' | 'desc' = 'desc', page: number = 0, search: string = ''): Promise<[AmazonClothingItemEntity[], number]> {
+	async findAll(column: string = 'Created_At', direction: 'asc' | 'desc' = 'desc', page: number = 0, search: string = '', parent: boolean = true, record?: IAmazonClothingItem): Promise<[AmazonClothingItemEntity[], number]> {
 		const cols = this.getCols();
 		const $or = cols.reduce((acc, item) => {
 			acc.push({ [item.id]: { $regex: search } });
@@ -33,9 +33,23 @@ export class AmazonClothingItemService {
 			take: 5,
 			skip: page * 5,
 			where: {
-				$or
+				$or,
+				Parent_Child: parent ? 'Parent' : 'Child',
+				Parent_SKU: parent ? '' : record.SKU
 			},
 		});
+	}
+
+	async createMany(amazonClothingItems: IAmazonClothingItem[]): Promise<string> {
+		try {
+			for (let i = 0; i < amazonClothingItems.length; i++) {
+				const amazonClothingItem = amazonClothingItems[i];
+				await this.amazonClothingItemRepository.save(amazonClothingItem)
+			}
+			return 'success';
+		} catch (error) {
+			throw error;
+		}
 	}
 
 	async create(amazonClothingItem: IAmazonClothingItem): Promise<AmazonClothingItemEntity> {

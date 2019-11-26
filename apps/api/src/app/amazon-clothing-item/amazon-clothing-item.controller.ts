@@ -15,6 +15,17 @@ export class AmazonClothingItemController {
 		const [amazonClothingItems, count] = await this.amazonClothingItemSVC.findAll(column, direction, page, search);
 		return amazonClothingItems;
 	}
+	@Post('getChildren')
+	async findAllChildren(
+		@Body() body: any,
+		@Query('column') column: string,
+		@Query('direction') direction: 'asc' | 'desc',
+		@Query('page') page: number,
+		@Query('search') search: string,
+	): Promise<AmazonClothingItemEntity[]> {
+		const [amazonClothingItems, count] = await this.amazonClothingItemSVC.findAll(column, direction, page, search, false, body);
+		return amazonClothingItems;
+	}
 
 	@Get('allCount')
 	async allCount(@Req() req: Request): Promise<number> {
@@ -22,6 +33,16 @@ export class AmazonClothingItemController {
 		return count;
 	}
 
+	@Post('import')
+	async import(@Body() body: any): Promise<string> {
+		try {
+			const message = await this.amazonClothingItemSVC.createMany(body);
+			return message;
+		} catch (error) {
+			console.log(error);
+			return error;
+		}
+	}
 	@Post('createOne')
 	async createOne(@Body() body: any): Promise<AmazonClothingItemEntity> {
 		try {

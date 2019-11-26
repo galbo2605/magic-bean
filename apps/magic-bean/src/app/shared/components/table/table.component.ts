@@ -9,6 +9,7 @@ import { ITableActionItems } from './interfaces/table-action-items.interfaces';
 import { take, debounceTime, tap } from 'rxjs/operators';
 import { IRequest } from '../../interfaces/request.interface';
 import { ApiRequestService } from '../../services/api-request.service';
+import { IAmazonClothingItem } from '@magic-bean/api-interfaces';
 @Component({
 	selector: 'magic-bean-table',
 	templateUrl: './table.component.html',
@@ -29,8 +30,9 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 	@Input() dataRequest: IRequest;
 	@Input() count: number;
 	@Input() actionItems: ITableActionItems[]
-	@Output() action = new Subject<IAction>();
 	@Input() isLoadingResults = false;
+	@Input() child: boolean;
+	@Output() action = new Subject<IAction>();
 
 	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 	@ViewChild(MatSort, { static: true }) sort: MatSort;
@@ -46,9 +48,13 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 	filterValue = '';
 
 	expandedElement: any | null;
+	shouldExpand: boolean;
 	constructor(private tableService: TableService, private apiReqSVC: ApiRequestService) { }
 
 	ngOnInit() {
+		if (this.actionItems) {
+			this.shouldExpand = !!this.actionItems.find(actionItem => actionItem.type === 'expand');
+		}
 		if (this.colRequest) {
 			this.fetchColumns();
 		}
@@ -57,13 +63,19 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 		}
 		this.tableService.tableState$.subscribe(({ type, payload }) => {
 			switch (type) {
-				case 'updateRow':
+				case 'updateRow': {
 					const key = payload.key;
 					const value = payload.value;
-					const updatedRecord = payload.record;
-					let result = this.dataSRC.data.find(record => record[key] === value);
-					result = updatedRecord;
-					break;
+					const updatedRecord = payload.updatedRow;
+					const index = this.dataSRC.data.findIndex(record => record[key] === value);
+					this.dataSRC.data[index] = updatedRecord;
+					this.dataSRC.data = this.dataSRC.data;
+				} break;
+				case 'deleteRow': {
+					const key = payload.key;
+					const value = payload.value;
+					this.dataSRC.data = this.dataSRC.data.filter(record => record[key] !== value);
+				} break;
 				default:
 					break;
 			}

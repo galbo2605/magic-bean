@@ -15,4 +15,9 @@ export class TableService {
 		const payload = { key, value, updatedRow };
 		this.tableAction('updateRow', payload);
 	}
+
+	deleteRow(key: string, value: any, deleteRow: any) {
+		const payload = { key, value, deleteRow };
+		this.tableAction('deleteRow', payload);
+	}
 }

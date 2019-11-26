@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnChanges } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnChanges, ChangeDetectorRef } from '@angular/core';
 import { FormGroup, Validators, ControlContainer, FormGroupDirective, AbstractControl, FormControl } from '@angular/forms';
 import { TFieldType } from './types/field-type.type';
 import { EFieldType } from './enums/field.-type.enum';
@@ -28,7 +28,7 @@ export class FormFieldComponent implements OnChanges {
 	readonly fieldType = EFieldType;
 	control: AbstractControl;
 
-	constructor() { }
+	constructor(private cDR: ChangeDetectorRef) { }
 
 	ngOnChanges(): void {
 		this.form.addControl(this.controlName, new FormControl())

@@ -36,16 +36,17 @@
 		<ng-container matColumnDef="star"
 						  stickyEnd>
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
-			<mat-cell *matCellDef="let element">
+			<mat-cell *matCellDef="let row"
+						 [style.position]="child ? 'absolute' : 'sticky'"
+						 [style.right]="child ? '15px' : '0'">
 				<button mat-icon-button
-						  [matMenuTriggerFor]="menu"
-						  aria-label="Example icon-button with a menu">
+						  [matMenuTriggerFor]="menu">
 					<mat-icon>more_vert</mat-icon>
 				</button>
 				<mat-menu #menu="matMenu">
 					<button mat-menu-item
 							  *ngFor="let actionItem of actionItems"
-							  (click)="sendAction(actionItem.type, element)">
+							  (click)="sendAction(actionItem.type, row)">
 						<mat-icon [color]="actionItem.color">{{actionItem.icon}}</mat-icon>
 						<span>{{actionItem.label}}</span>
 					</button>
@@ -55,26 +56,33 @@
 		</ng-container>
 
 		<!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
-		<ng-container matColumnDef="expandedDetail">
+		<ng-container *ngIf="shouldExpand"
+						  matColumnDef="expandedDetail">
 			<mat-cell *matCellDef="let row"
-						 [attr.colspan]="columnIDs.length">
-				<div class="example-element-detail"
-					  [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-					<ng-container *ngTemplateOutlet="expandableContentTmpl, context: {$implicit: row}"></ng-container>
+						 [attr.colspan]="columnIDs.length"
+						 style="width: 100%; padding: unset">
+				<div [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+					<ng-container *ngTemplateOutlet="expandableContentTmpl, 
+										context: {$implicit: row, isExpanded: expandedElement === row}"></ng-container>
 				</div>
 			</mat-cell>
 		</ng-container>
 
 		<mat-header-row *matHeaderRowDef="columnIDs; sticky: true"></mat-header-row>
 		<mat-row *matRowDef="let row; columns: columnIDs;"
-					(click)="sendAction('table-row', row)"
-					class="example-element-row"
-					[class.example-expanded-row]="expandedElement === row"></mat-row>
-		<mat-row *matRowDef="let row; columns: ['expandedDetail']"
-					class="example-detail-row"></mat-row>
+					(click)="sendAction('table-row', row)"></mat-row>
+		<ng-container *ngIf="shouldExpand">
+			<mat-row *matRowDef="let row; columns: ['expandedDetail']"
+						[style.display]="expandedElement === row ? 'inline-flex' : 'none'"></mat-row>
+		</ng-container>
 	</mat-table>
-
+	<span *ngIf="child"
+			[style.height]="'56px'"
+			[style.display]="'block'"></span>
 	<mat-paginator [length]="resultsLength"
 						[pageSizeOptions]="[5, 10, 20]"
-						showFirstLastButtons></mat-paginator>
+						showFirstLastButtons
+						[style.transform]="child ? 'translateY(-56px)' : 'unset'"
+						[style.position]="child ? 'absolute' : 'relative'"
+						[style.right]="child ? '15px' : '0'"></mat-paginator>
 </div>

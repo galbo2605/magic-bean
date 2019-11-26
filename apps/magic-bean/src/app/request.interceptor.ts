@@ -10,7 +10,6 @@ export class RequestInterceptor implements HttpInterceptor {
 		const newRequest = request.clone({
 			url: `${environment.host}${request.url}`
 		});
-		console.log(newRequest)
 		return next.handle(newRequest);
 	}
 }

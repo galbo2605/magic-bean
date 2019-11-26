@@ -1,8 +1,13 @@
 <div class="test-header">
-	<p class="test-p">test works!</p>
 	<magic-bean-button class="form-dialog"
 							 (btnClick)="actions($event)"
 							 label="Form Dialog"></magic-bean-button>
+	<input type="file"
+			 (change)="onFileChange($event)"
+			 multiple="false">
+	<magic-bean-button class="form-dialog"
+							 (btnClick)="actions($event)"
+							 label="Export Excel"></magic-bean-button>
 </div>
 <magic-bean-table class="test-table"
 						[columns]="columns$ | async"
@@ -13,13 +18,16 @@
 						[actionItems]="actionItems"
 						(action)="actions($event)">
 	<ng-template #expandableContent
-					 let-row>
+					 let-row
+					 let-isExpanded="isExpanded">
 		<!-- <div class="expandable-content">expandable content {{row | json}}</div> -->
-		<magic-bean-table class="test-table"
+		<magic-bean-table *ngIf="isExpanded"
+								class="test-table"
 								[colRequest]="colRequest"
-								[dataRequest]="dataRequest"
-								[actionItems]="actionItems"
-								(action)="actions($event)"></magic-bean-table>
+								[dataRequest]="childrenDataRequest"
+								[actionItems]="childActionItems"
+								(action)="actions($event)"
+								child="true"></magic-bean-table>
 	</ng-template>
 
 </magic-bean-table>
