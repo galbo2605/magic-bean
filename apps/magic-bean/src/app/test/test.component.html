@@ -3,30 +3,30 @@
 							 (btnClick)="actions($event)"
 							 label="Form Dialog"></magic-bean-button>
 	<input type="file"
-			 (change)="onFileChange($event)"
+			 (change)="actions({type: 'import', payload: $event})"
 			 multiple="false">
 	<magic-bean-button class="form-dialog"
 							 (btnClick)="actions($event)"
 							 label="Export Excel"></magic-bean-button>
 </div>
 <magic-bean-table class="test-table"
+						tableName="parentTable"
 						[columns]="columns$ | async"
 						[colRequest]="colRequest"
 						[dataSource]="dataSource$ | async"
 						[dataRequest]="dataRequest"
-						[count]="dataCount$ | async"
 						[actionItems]="actionItems"
-						(action)="actions($event)">
+						(action)="actions($event, 'parentTable')">
 	<ng-template #expandableContent
 					 let-row
 					 let-isExpanded="isExpanded">
-		<!-- <div class="expandable-content">expandable content {{row | json}}</div> -->
 		<magic-bean-table *ngIf="isExpanded"
 								class="test-table"
+								tableName="childTable"
 								[colRequest]="colRequest"
 								[dataRequest]="childrenDataRequest"
 								[actionItems]="childActionItems"
-								(action)="actions($event)"
+								(action)="actions($event, 'childTable')"
 								child="true"></magic-bean-table>
 	</ng-template>
 

@@ -36,6 +36,11 @@ mat-cell {
   white-space: nowrap;
 }
 
+.expandable-cell {
+  width: 100%;
+  padding: unset;
+}
+
 .example-loading-shade {
   position: absolute;
   top: 0;

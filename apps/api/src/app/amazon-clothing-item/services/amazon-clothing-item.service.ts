@@ -20,7 +20,7 @@ export class AmazonClothingItemService {
 		return cols;
 	}
 
-	async findAll(column: string = 'Created_At', direction: 'asc' | 'desc' = 'desc', page: number = 0, search: string = '', parent: boolean = true, record?: IAmazonClothingItem): Promise<[AmazonClothingItemEntity[], number]> {
+	async findAll(column: string = 'Created_At', direction: 'asc' | 'desc' = 'desc', page: number = 0, pageSize: number = 5, search: string = '', parent: boolean = true, record?: IAmazonClothingItem): Promise<[AmazonClothingItemEntity[], number]> {
 		const cols = this.getCols();
 		const $or = cols.reduce((acc, item) => {
 			acc.push({ [item.id]: { $regex: search } });
@@ -28,14 +28,14 @@ export class AmazonClothingItemService {
 		}, []);
 		return await this.amazonClothingItemRepository.findAndCount({
 			order: {
-				[column]: direction.toLocaleUpperCase()
+				[column]: direction.toLocaleUpperCase(),
 			},
-			take: 5,
-			skip: page * 5,
+			take: +pageSize,
+			skip: page * pageSize,
 			where: {
 				$or,
 				Parent_Child: parent ? 'Parent' : 'Child',
-				Parent_SKU: parent ? '' : record.SKU
+				Parent_SKU: parent ? null : record.SKU
 			},
 		});
 	}
@@ -44,7 +44,14 @@ export class AmazonClothingItemService {
 		try {
 			for (let i = 0; i < amazonClothingItems.length; i++) {
 				const amazonClothingItem = amazonClothingItems[i];
-				await this.amazonClothingItemRepository.save(amazonClothingItem)
+				const foundItem = await this.amazonClothingItemRepository.findOne({
+					SKU: amazonClothingItem.SKU
+				})
+				if (foundItem) {
+					await this.amazonClothingItemRepository.update({ SKU: amazonClothingItem.SKU }, amazonClothingItem);
+				} else {
+					await this.amazonClothingItemRepository.insertOne(amazonClothingItem);
+				}
 			}
 			return 'success';
 		} catch (error) {
@@ -72,8 +79,14 @@ export class AmazonClothingItemService {
 		return await this.amazonClothingItemRepository.save(foundOne);
 	}
 
-	async delete(amazonClothingItemID: string): Promise<void> {
-		await this.amazonClothingItemRepository.delete(amazonClothingItemID);
+	async delete(uid: string): Promise<string> {
+		const itemToDelete = await this.amazonClothingItemRepository.findOne(uid);
+		await this.amazonClothingItemRepository.deleteMany({
+			$or: [
+				{ SKU: itemToDelete.SKU },
+				{ Parent_SKU: itemToDelete.SKU }]
+		});
+		return 'success';
 	}
 
 }

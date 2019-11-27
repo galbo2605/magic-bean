@@ -37,8 +37,7 @@
 						  stickyEnd>
 			<mat-header-cell *matHeaderCellDef></mat-header-cell>
 			<mat-cell *matCellDef="let row"
-						 [style.position]="child ? 'absolute' : 'sticky'"
-						 [style.right]="child ? '15px' : '0'">
+						 [style.position]="child ? 'absolute' : 'sticky'">
 				<button mat-icon-button
 						  [matMenuTriggerFor]="menu">
 					<mat-icon>more_vert</mat-icon>
@@ -60,7 +59,7 @@
 						  matColumnDef="expandedDetail">
 			<mat-cell *matCellDef="let row"
 						 [attr.colspan]="columnIDs.length"
-						 style="width: 100%; padding: unset">
+						 class="expandable-cell">
 				<div [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
 					<ng-container *ngTemplateOutlet="expandableContentTmpl, 
 										context: {$implicit: row, isExpanded: expandedElement === row}"></ng-container>
@@ -79,10 +78,9 @@
 	<span *ngIf="child"
 			[style.height]="'56px'"
 			[style.display]="'block'"></span>
-	<mat-paginator [length]="resultsLength"
-						[pageSizeOptions]="[5, 10, 20]"
-						showFirstLastButtons
+	<mat-paginator showFirstLastButtons
+						(page)="paginate($event)"
 						[style.transform]="child ? 'translateY(-56px)' : 'unset'"
 						[style.position]="child ? 'absolute' : 'relative'"
-						[style.right]="child ? '15px' : '0'"></mat-paginator>
+						[style.right]="child ? '0' : '0'"></mat-paginator>
 </div>
