@@ -1,6 +1,11 @@
 import { Controller, Get, Res, Req, Post, Body, Query } from '@nestjs/common';
 import { AmazonClothingItemService } from './services/amazon-clothing-item.service';
 import { AmazonClothingItemEntity } from '@magic-bean/api-interfaces';
+interface IResponseWithCount {
+	records: AmazonClothingItemEntity[];
+	count: number;
+};
+
 @Controller('amazon-clothing-item')
 export class AmazonClothingItemController {
 	constructor(private amazonClothingItemSVC: AmazonClothingItemService) { }
@@ -12,9 +17,9 @@ export class AmazonClothingItemController {
 		@Query('page') page: number,
 		@Query('pageSize') pageSize: number,
 		@Query('search') search: string,
-	): Promise<[AmazonClothingItemEntity[], number]> {
+	): Promise<IResponseWithCount> {
 		const [amazonClothingItems, count] = await this.amazonClothingItemSVC.findAll(column, direction, page, pageSize, search);
-		return [amazonClothingItems, count];
+		return { records: amazonClothingItems, count };
 	}
 	@Post('getChildren')
 	async findAllChildren(
@@ -24,9 +29,9 @@ export class AmazonClothingItemController {
 		@Query('page') page: number,
 		@Query('pageSize') pageSize: number,
 		@Query('search') search: string,
-	): Promise<[AmazonClothingItemEntity[], number]> {
+	): Promise<IResponseWithCount> {
 		const [amazonClothingItems, count] = await this.amazonClothingItemSVC.findAll(column, direction, page, pageSize, search, false, body);
-		return [amazonClothingItems, count];
+		return { records: amazonClothingItems, count };
 	}
 
 	@Get('allCount')
@@ -57,9 +62,9 @@ export class AmazonClothingItemController {
 	}
 
 	@Post('updateOne')
-	async updateOne(@Body() body: any): Promise<AmazonClothingItemEntity> {
-		const amazonClothingItem = await this.amazonClothingItemSVC.update(body);
-		return amazonClothingItem;
+	async updateOne(@Body() body: any): Promise<any> {
+		const message = await this.amazonClothingItemSVC.update(body);
+		return { message };
 	}
 
 	@Post('deleteOne')

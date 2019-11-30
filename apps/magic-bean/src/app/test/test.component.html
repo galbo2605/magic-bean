@@ -11,9 +11,7 @@
 </div>
 <magic-bean-table class="test-table"
 						tableName="parentTable"
-						[columns]="columns$ | async"
 						[colRequest]="colRequest"
-						[dataSource]="dataSource$ | async"
 						[dataRequest]="dataRequest"
 						[actionItems]="actionItems"
 						(action)="actions($event, 'parentTable')">

@@ -1,4 +1,9 @@
-export interface IColumns {
+export interface ITableColumns {
+	columns: IColumn[];
+	columnIDs: string[];
+}
+
+interface IColumn {
 	id: string;
 	name: string;
 	type?: string;

@@ -34,9 +34,9 @@ export class TestService {
 			method: EMethod.POST,
 			body: amazonClothingItem
 		};
-		this.sendRequest(saveRequest).subscribe((savedItem: IAmazonClothingItem) => {
+		this.sendRequest(saveRequest).subscribe((savedItem: string) => {
 			console.log('api response: ', savedItem);
-			this.tableService.updateRow('UID', savedItem.UID, savedItem, tableName);
+			this.tableService.updateRow('UID', amazonClothingItem.UID, amazonClothingItem, tableName);
 		});
 	}
 

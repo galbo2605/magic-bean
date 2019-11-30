@@ -67,7 +67,7 @@ export class AmazonClothingItemService {
 		}
 	}
 
-	async update(amazonClothingItem: AmazonClothingItemEntity): Promise<AmazonClothingItemEntity> {
+	async update(amazonClothingItem: AmazonClothingItemEntity): Promise<string> {
 		const foundOne = await this.amazonClothingItemRepository.findOne(amazonClothingItem.UID);
 		for (const key in foundOne) {
 			if (foundOne.hasOwnProperty(key)) {
@@ -76,7 +76,8 @@ export class AmazonClothingItemService {
 				}
 			}
 		}
-		return await this.amazonClothingItemRepository.save(foundOne);
+		await this.amazonClothingItemRepository.save(foundOne);
+		return 'success';
 	}
 
 	async delete(uid: string): Promise<string> {

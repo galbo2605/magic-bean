@@ -1,14 +1,14 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, SimpleChanges, OnChanges, Output, ViewChild, ElementRef, AfterViewInit, TemplateRef, ContentChild, HostBinding, ChangeDetectorRef } from '@angular/core';
-import { IColumns } from '../../interfaces/column.interface';
-import { Subject, fromEvent } from 'rxjs';
+import { Component, OnInit, Input, ChangeDetectionStrategy, SimpleChanges, OnChanges, Output, ViewChild, ElementRef, AfterViewInit, TemplateRef, ContentChild, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { ITableColumns } from './interfaces/table-column.interface';
+import { Subject, fromEvent, Observable } from 'rxjs';
 import { IAction } from '../../interfaces/action.interface';
-import { MatPaginator, MatTableDataSource, MatSort, Sort, SortDirection, PageEvent } from '@angular/material';
+import { Sort, SortDirection, PageEvent, MatTable } from '@angular/material';
 import { TableService } from './services/table.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
 import { ITableActionItems } from './interfaces/table-action-items.interfaces';
-import { take, debounceTime, tap } from 'rxjs/operators';
 import { IRequest } from '../../interfaces/request.interface';
-import { ApiRequestService } from '../../services/api-request.service';
+import { ITableData } from './interfaces/table-data.interface';
+import { tap, debounceTime, map, takeWhile, filter } from 'rxjs/operators';
 
 @Component({
 	selector: 'magic-bean-table',
@@ -23,124 +23,117 @@ import { ApiRequestService } from '../../services/api-request.service';
 		]),
 	],
 })
-export class TableComponent implements OnInit, OnChanges, AfterViewInit {
+export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestroy {
 	@Input() tableName: string;
-	@Input() columns: IColumns[];
 	@Input() colRequest: IRequest;
-	@Input() dataSource: any[];
 	@Input() dataRequest: IRequest;
 	@Input() actionItems: ITableActionItems[]
-	@Input() isLoadingResults = false;
 	@Input() child: boolean;
 	@Output() action = new Subject<IAction>();
 
 	@HostBinding('style.position') position: string;
 
-	@ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
-	@ViewChild(MatSort, { static: true }) sort: MatSort;
+	@ViewChild(MatTable, { static: false }) matTable: MatTable<any>;
 	@ViewChild('filterInput', { static: true }) filterInput: ElementRef;
 	@ContentChild('expandableContent', { static: true }) expandableContentTmpl: TemplateRef<any>;
 
-	columnIDs: string[];
-	dataSRC: MatTableDataSource<any> = new MatTableDataSource<any>();
-	isRateLimitReached = false;
+	columns$: Observable<ITableColumns>;
+	dataSource$: Observable<ITableData>;
+	isLoadingResults$: Observable<boolean>;
 
-	sortData: { column: string, direction: SortDirection } = { column: 'Created_At', direction: 'desc' };
 	filterValue = '';
+	sortData: { column: string, direction: SortDirection } = { column: 'Created_At', direction: 'desc' };
+	page: PageEvent = {
+		length: 0,
+		pageIndex: 0,
+		pageSize: 10,
+	};
 
 	expandedElement: any | null;
 	shouldExpand: boolean;
-	constructor(private cDR: ChangeDetectorRef, private tableService: TableService, private apiReqSVC: ApiRequestService) { }
+
+	componentActive = true;
+	constructor(private tableService: TableService, private cDR: ChangeDetectorRef) { }
 
 	ngOnInit() {
-		this.dataSRC.sort = this.sort;
-		this.dataSRC.paginator = this.paginator;
-		this.dataSRC.paginator.pageSizeOptions = [5, 10, 20];
-		this.tableService.tableState$.subscribe(({ type, payload, tableName }) => {
-			console.log(type, payload, tableName)
+		this.isLoadingResults$ = this.tableService.isLoadingResults$.asObservable();
+		this.dataSource$ = this.tableService.dataSource$.pipe(
+			filter(result => {
+				return result ? !!Object.keys(result).find(table => table === this.tableName) : true
+			}),
+			map(result => {
+				console.log(result)
+				if (result) {
+					if (!this.page.length) {
+						this.page.length = result[this.tableName].count;
+					} else {
+						result[this.tableName].count = this.page.length;
+					}
+					return result[this.tableName];
+				}
+			})
+		);
+		this.tableService.tableState$.pipe(
+			takeWhile(() => this.componentActive),
+			tap(v => this.tableService.isLoadingResults$.next(true)),
+			debounceTime(1000),
+
+		).subscribe(({ type, payload, tableName }) => {
 			if (tableName === this.tableName) {
+				this.tableService.isLoadingResults$.next(false);
+				console.log(type, payload, tableName)
 				switch (type) {
 					case 'readRows': {
-						this.isLoadingResults = true;
 						const rowsRequest: IRequest = {
 							...this.dataRequest,
 							path: this.getPath(),
-							...payload.request
+							...payload as IRequest
 						};
-						this.apiReqSVC.request(rowsRequest).pipe(
-							take(1)
-						).subscribe(([records, count]) => {
-							this.isLoadingResults = false;
-							this.dataSource = records;
-							this.dataSRC.data = this.dataSource;
-							this.dataSRC.paginator.length = count;
-							console.log(this.dataSRC.paginator.length);
-							console.log(this.paginator.length);
-						});
+						this.tableService.getData(rowsRequest, tableName);
 					} break;
 					case 'insertRow': {
-						const insertdRecord = payload.insertdRow;
-						this.dataSRC.data.push(insertdRecord);
-						this.dataSRC.data = this.dataSRC.data;
+						this.tableService.addData(payload, tableName);
+						this.page.length += 1;
 					} break;
 					case 'updateRow': {
-						const key = payload.key;
-						const value = payload.value;
-						const updatedRecord = payload.updatedRow;
-						const index = this.dataSRC.data.findIndex(record => record[key] === value);
-						this.dataSRC.data[index] = updatedRecord;
-						this.dataSRC.data = this.dataSRC.data;
+						this.tableService.updateData(payload, tableName);
 					} break;
 					case 'deleteRow': {
-						const key = payload.key;
-						const value = payload.value;
-						const index = this.dataSRC.data.findIndex(record => record[key] === value);
-						this.dataSRC.data.splice(index, 1);
-						this.dataSRC.data = this.dataSRC.data;
+						this.tableService.deleteData(payload, tableName);
+						this.page.length -= 1;
 					} break;
-					default:
-						break;
+				}
+				if (this.matTable) {
+					this.matTable.renderRows();
 				}
 			}
 		});
-
-		if (this.actionItems) {
-			this.shouldExpand = !!this.actionItems.find(actionItem => actionItem.type === 'expand');
-		}
-		if (this.colRequest) {
-			this.fetchColumns();
-		}
-		if (this.dataRequest) {
-			this.tableService.readRows(null, this.tableName);
-		}
+		this.initTable();
 	}
 
 	ngOnChanges(changes: SimpleChanges): void {
 		console.log(changes);
 		this.position = this.child ? 'unset' : 'relative';
-		if (!this.colRequest && this.columns) {
-			this.columnIDs = this.columns.map(col => col.id);
-			this.columnIDs.push('star');
-		}
-		if (!this.dataRequest && this.dataSource) {
-			this.dataSRC = new MatTableDataSource<any>(this.dataSource);
-			this.dataSRC.paginator = this.paginator;
-			this.dataSRC.sort = this.sort;
-		}
 	}
 
 	ngAfterViewInit(): void {
-		// filter table
-		fromEvent(this.filterInput.nativeElement, 'input').pipe(
-			tap(InputEvent => {
-				this.isLoadingResults = true;
-			}),
-			debounceTime(1000),
-		).subscribe((inputEvent: any) => {
-			this.isLoadingResults = false;
-			this.filterValue = (<any>inputEvent.target).value;
+		this.filterTable();
+	}
+
+	ngOnDestroy(): void {
+		this.componentActive = false;
+	}
+
+	initTable(): void {
+		if (this.actionItems) {
+			this.shouldExpand = !!this.actionItems.find(actionItem => actionItem.type === 'expand');
+		}
+		if (this.colRequest) {
+			this.columns$ = this.tableService.getColumns(this.colRequest);
+		}
+		if (this.dataRequest) {
 			this.tableService.readRows(null, this.tableName);
-		});
+		}
 	}
 
 	sendAction(type: string, payload: any) {
@@ -152,6 +145,16 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 		this.action.next({ type, payload });
 	}
 
+	filterTable(): void {
+		fromEvent(this.filterInput.nativeElement, 'input').pipe(
+			takeWhile(() => this.componentActive),
+
+		).subscribe((inputEvent: any) => {
+			this.filterValue = (<any>inputEvent.target).value;
+			this.tableService.readRows(null, this.tableName);
+		});
+	}
+
 	sortColumn(sort: Sort): void {
 		const { active: column, direction: direction } = sort;
 		this.sortData = { column, direction };
@@ -159,29 +162,12 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit {
 	}
 
 	paginate(page: PageEvent): void {
-		// if (page.pageIndex !== this.dataSRC.paginator.pageIndex || page.pageSize !== this.dataSRC.paginator.pageSize) {
+		this.page = { ...page };
 		this.tableService.readRows(null, this.tableName);
-		// }
-	}
-
-	fetchColumns(req?: IRequest): void {
-		this.isLoadingResults = true;
-		const colRequest: IRequest = {
-			...this.colRequest,
-			...req
-		};
-		this.apiReqSVC.request(colRequest).pipe(
-			take(1)
-		).subscribe(res => {
-			this.isLoadingResults = false;
-			this.columns = res;
-			this.columnIDs = this.columns.map(col => col.id);
-			this.columnIDs.push('star');
-		});
 	}
 
 	getPath(): string {
-		return `${this.dataRequest.path}?column=${this.sortData.column}&direction=${this.sortData.direction || 'desc'}&page=${this.dataSRC.paginator.pageIndex}&pageSize=${this.dataSRC.paginator.pageSize}&search=${this.filterValue}`;
+		return `${this.dataRequest.path}?column=${this.sortData.column}&direction=${this.sortData.direction || 'desc'}&page=${this.page.pageIndex}&pageSize=${this.page.pageSize || 5}&search=${this.filterValue}`;
 	}
 }
 
