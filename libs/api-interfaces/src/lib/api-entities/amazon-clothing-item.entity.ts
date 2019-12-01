@@ -107,9 +107,7 @@ export class AmazonClothingItemEntity {
 
 	@BeforeInsert()
 	setDefaultValue() {
-		const newDate = new Date();
-		this.First_Created = newDate;
-		this.Last_Updated = newDate;
+		this.First_Created = new Date();
 	}
 
 	@BeforeUpdate()

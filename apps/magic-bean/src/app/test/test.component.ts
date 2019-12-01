@@ -77,6 +77,7 @@ export class TestComponent implements OnInit {
 				break;
 			case 'import': {
 				const file = action.payload;
+				this.tableService.isLoadingResults$.next({ parentTable: true });
 				this.speardSheetSVC.getDataFromFile(file).pipe(
 					switchMap(data => {
 						const saveRequest: IRequest = {

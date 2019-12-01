@@ -8,7 +8,7 @@ import { trigger, state, transition, style, animate } from '@angular/animations'
 import { ITableActionItems } from './interfaces/table-action-items.interfaces';
 import { IRequest } from '../../interfaces/request.interface';
 import { ITableData } from './interfaces/table-data.interface';
-import { tap, debounceTime, map, takeWhile, filter } from 'rxjs/operators';
+import { takeWhile, filter } from 'rxjs/operators';
 
 @Component({
 	selector: 'magic-bean-table',
@@ -56,56 +56,28 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 	constructor(private tableService: TableService, private cDR: ChangeDetectorRef) { }
 
 	ngOnInit() {
-		this.isLoadingResults$ = this.tableService.isLoadingResults$.asObservable();
-		this.dataSource$ = this.tableService.dataSource$.pipe(
-			filter(result => {
-				return result ? !!Object.keys(result).find(table => table === this.tableName) : true
-			}),
-			map(result => {
-				console.log(result)
-				if (result) {
-					if (!this.page.length) {
-						this.page.length = result[this.tableName].count;
-					} else {
-						result[this.tableName].count = this.page.length;
-					}
-					return result[this.tableName];
-				}
-			})
-		);
+		this.isLoadingResults$ = this.tableService.isLoading(this.tableName);
+		this.dataSource$ = this.tableService.getDataSource(this.tableName);
 		this.tableService.tableState$.pipe(
 			takeWhile(() => this.componentActive),
-			tap(v => this.tableService.isLoadingResults$.next(true)),
-			debounceTime(1000),
-
+			filter(({ tableName }) => tableName === this.tableName),
 		).subscribe(({ type, payload, tableName }) => {
-			if (tableName === this.tableName) {
-				this.tableService.isLoadingResults$.next(false);
-				console.log(type, payload, tableName)
-				switch (type) {
-					case 'readRows': {
-						const rowsRequest: IRequest = {
-							...this.dataRequest,
-							path: this.getPath(),
-							...payload as IRequest
-						};
-						this.tableService.getData(rowsRequest, tableName);
-					} break;
-					case 'insertRow': {
-						this.tableService.addData(payload, tableName);
-						this.page.length += 1;
-					} break;
-					case 'updateRow': {
-						this.tableService.updateData(payload, tableName);
-					} break;
-					case 'deleteRow': {
-						this.tableService.deleteData(payload, tableName);
-						this.page.length -= 1;
-					} break;
-				}
-				if (this.matTable) {
-					this.matTable.renderRows();
-				}
+			console.log(type, payload, tableName)
+			switch (type) {
+				case 'readRows': {
+					const rowsRequest: IRequest = {
+						...this.dataRequest,
+						path: this.getPath(),
+						...payload as IRequest
+					};
+					this.tableService.getData(rowsRequest, tableName);
+				} break;
+				case 'updateRow': {
+					this.tableService.updateData(payload, tableName);
+				} break;
+			}
+			if (this.matTable) {
+				this.matTable.renderRows();
 			}
 		});
 		this.initTable();

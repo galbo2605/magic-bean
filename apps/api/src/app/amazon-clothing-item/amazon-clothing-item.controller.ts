@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Req, Post, Body, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query } from '@nestjs/common';
 import { AmazonClothingItemService } from './services/amazon-clothing-item.service';
 import { AmazonClothingItemEntity } from '@magic-bean/api-interfaces';
 interface IResponseWithCount {
@@ -32,12 +32,6 @@ export class AmazonClothingItemController {
 	): Promise<IResponseWithCount> {
 		const [amazonClothingItems, count] = await this.amazonClothingItemSVC.findAll(column, direction, page, pageSize, search, false, body);
 		return { records: amazonClothingItems, count };
-	}
-
-	@Get('allCount')
-	async allCount(@Req() req: Request): Promise<number> {
-		const [amazonClothingItems, count] = await this.amazonClothingItemSVC.findAll();
-		return count;
 	}
 
 	@Post('import')

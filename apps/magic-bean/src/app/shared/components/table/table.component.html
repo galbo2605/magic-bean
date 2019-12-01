@@ -80,7 +80,7 @@
 		<span *ngIf="child"
 				[style.height]="'56px'"
 				[style.display]="'block'"></span>
-		<mat-paginator [length]="page.length"
+		<mat-paginator [length]="dataRes.count"
 							[pageSize]="page.pageSize"
 							[pageIndex]="page.pageIndex"
 							[pageSizeOptions]="[10, 25, 50]"

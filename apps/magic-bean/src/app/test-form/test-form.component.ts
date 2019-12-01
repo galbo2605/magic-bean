@@ -150,9 +150,10 @@ export const clothingFields: IField[] = [
 		required: false, min: 10, max: 99
 	},
 	{
-		type: EFieldType.TEXT, controlName: 'Relationship', placeholder: `Enter your Item's Relationship`,
+		type: EFieldType.DROPDOWN, controlName: 'Relationship', placeholder: `Enter your Item's Relationship`,
 		hintLabel: `If this is a variation of other item types`, value: ``,
-		required: false, min: 10, max: 99
+		required: false,
+		options: ['', 'Variation']
 	},
 	{
 		type: EFieldType.DROPDOWN, controlName: 'Variation_Theme', placeholder: `Choose your Variation's Theme`,

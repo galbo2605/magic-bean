@@ -24,7 +24,7 @@ export class TestService {
 		};
 		this.sendRequest(saveRequest).subscribe((savedItem: IAmazonClothingItem) => {
 			console.log('api response: ', savedItem);
-			this.tableService.insertRow(savedItem, tableName);
+			this.tableService.readRows(null, 'parentTable');
 		});
 	}
 
@@ -48,7 +48,7 @@ export class TestService {
 		};
 		this.sendRequest(deleteRequest).subscribe(res => {
 			console.log(res);
-			this.tableService.deleteRow('UID', amazonClothingItem.UID, amazonClothingItem, tableName);
+			this.tableService.readRows(null, 'parentTable');
 		});
 	}
 }
