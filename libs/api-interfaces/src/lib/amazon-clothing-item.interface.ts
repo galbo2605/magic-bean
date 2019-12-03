@@ -7,7 +7,7 @@ export interface IAmazonClothingItem {
 	Item_Type?: string;
 	Price?: number;
 	Days_Till_Ready?: number;
-	Quantity?: string;
+	Quantity?: number;
 	Bullet_Point_1?: string;
 	Bullet_Point_2?: string;
 	Bullet_Point_3?: string;

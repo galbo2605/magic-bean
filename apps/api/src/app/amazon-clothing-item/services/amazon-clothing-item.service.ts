@@ -42,7 +42,6 @@ export class AmazonClothingItemService {
 
 	async createMany(amazonClothingItems: IAmazonClothingItem[]): Promise<string> {
 		try {
-			const newDate = new Date();
 			// this.amazonClothingItemRepository.save(amazonClothingItems);
 			const findItemsToUpdate: Promise<AmazonClothingItemEntity>[] = [];
 			const itemsToCreateSKUMap: { [SKU: string]: boolean | IAmazonClothingItem } = {};
@@ -60,7 +59,6 @@ export class AmazonClothingItemService {
 				const updateItemFound = updateItemsFound[i];
 				if (updateItemFound) {
 					itemsToCreateSKUMap[updateItemFound.SKU] = false;
-					updateItemFound.Last_Updated = newDate;
 					const itemToUpdate = this.amazonClothingItemRepository.update({ SKU: updateItemFound.SKU }, updateItemFound);
 					itemsToUpdate.push(itemToUpdate);
 				}
@@ -71,7 +69,6 @@ export class AmazonClothingItemService {
 				if (itemsToCreateSKUMap.hasOwnProperty(SKU)) {
 					const itemToCreate = itemsToCreateSKUMap[SKU] as IAmazonClothingItem;
 					if (itemToCreate) {
-						itemToCreate.First_Created = newDate;
 						itemsToCreate.push(itemToCreate);
 					}
 				}
@@ -86,7 +83,6 @@ export class AmazonClothingItemService {
 
 	async create(amazonClothingItem: IAmazonClothingItem): Promise<AmazonClothingItemEntity> {
 		try {
-			amazonClothingItem.First_Created = new Date();
 			return await this.amazonClothingItemRepository.save(amazonClothingItem);
 		} catch (error) {
 			throw error;
@@ -110,13 +106,14 @@ export class AmazonClothingItemService {
 
 	async delete(uid: string): Promise<string> {
 		const itemToDelete = await this.amazonClothingItemRepository.findOne(uid);
-		await this.amazonClothingItemRepository.deleteMany({
+		const deletedChildren = this.amazonClothingItemRepository.deleteMany({
 			$and: [
 				{ Parent_SKU: itemToDelete.SKU },
 				{ Parent_Child: 'Child' }
 			]
 		});
-		await this.amazonClothingItemRepository.deleteOne({ SKU: itemToDelete.SKU });
+		const deletedParent = this.amazonClothingItemRepository.remove(itemToDelete);
+		await Promise.all([deletedParent, deletedChildren])
 		return 'success';
 	}
 

@@ -1,4 +1,4 @@
-import { Entity, Column, ObjectIdColumn, ObjectID, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { Entity, Column, ObjectIdColumn, ObjectID } from 'typeorm';
 
 @Entity()
 export class AmazonClothingItemEntity {
@@ -21,34 +21,34 @@ export class AmazonClothingItemEntity {
 	@Column({ length: 1000 })
 	Item_Type: string = null;
 
-	@Column({ length: 9999 })
+	@Column({ precision: 9999, scale: 2 })
 	Price: number = null;
 
-	@Column({ length: 90 })
+	@Column({ precision: 90 })
 	Days_Till_Ready: number = null;
 
-	@Column({ length: 100 })
-	Quantity: string = null;
+	@Column({ precision: 100 })
+	Quantity: number = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_1: string = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_2: string = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_3: string = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_4: string = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_5: string = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_6: string = null;
 
-	@Column({ length: 500 })
+	@Column({ length: 1500 })
 	Bullet_Point_7: string = null;
 
 	@Column({ length: 500 })
@@ -105,13 +105,4 @@ export class AmazonClothingItemEntity {
 	@Column()
 	Last_Updated: Date = null;
 
-	@BeforeInsert()
-	setDefaultValue() {
-		this.First_Created = new Date();
-	}
-
-	@BeforeUpdate()
-	updateDefaultValues() {
-		this.Last_Updated = new Date();
-	}
 }

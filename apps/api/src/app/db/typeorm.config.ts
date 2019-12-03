@@ -1,4 +1,3 @@
-import { join } from 'path';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { getMetadataArgsStorage } from 'typeorm';
 
@@ -9,5 +8,5 @@ export const ormConfig: TypeOrmModuleOptions = {
 	username: '',
 	password: '',
 	database: 'local',
-	entities: getMetadataArgsStorage().tables.map(tbls => tbls.target),
+	entities: getMetadataArgsStorage().tables.map(tbls => tbls.target)
 };

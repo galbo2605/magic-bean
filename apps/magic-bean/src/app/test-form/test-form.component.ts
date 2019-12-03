@@ -19,17 +19,17 @@ export class TestFormComponent implements OnInit {
 		public dialogRef: MatDialogRef<TestFormComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any) { }
 
-	ngOnInit() {
+	ngOnInit(): void {
 		console.log(this.data);
 	}
 
-	onSave() {
+	onSave(): void {
 		console.log(this.formGroup);
 		this.data = { ...this.data, ...this.formGroup.getRawValue() };
 		this.dialogRef.close({ type: 'save', payload: this.data })
 	}
 
-	onClose() {
+	onClose(): void {
 		console.log(this.formGroup);
 		this.dialogRef.close({ type: 'close', payload: 'close' });
 	}
@@ -66,52 +66,52 @@ export const clothingFields: IField[] = [
 	{
 		type: EFieldType.NUMBER, controlName: 'Price', placeholder: 'Enter your Price',
 		hintLabel: 'Range 0 - 99', value: 14.99,
-		required: true, min: 0, max: 9999
+		required: true, min: 0, max: 9999, step: 0.01
 	},
 	{
 		type: EFieldType.NUMBER, controlName: 'Days_Till_Ready', placeholder: 'Enter your Fulfillment',
 		hintLabel: 'Days till ready for delivery', value: 3,
-		required: true, min: 0, max: 90
+		required: true, min: 1, max: 90, step: 1
 	},
 	{
 		type: EFieldType.NUMBER, controlName: 'Quantity', placeholder: 'Enter your Quantity',
 		hintLabel: 'Number of items available', value: 100,
-		required: true, min: 0, max: 100
+		required: true, min: 0, max: 100, step: 1
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_1', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 1 about you or this item`, value: `Double-needle stitching throughout; seamless rib at neck, feminine ½" rib mid scoop neck; side seamed with slightly tapered Missy fit, cap sleeves for comfort, taped shoulder-to-shoulder.  Ash color is 99% cotton, 1% polyester.`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_2', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 2 about you or this item`, value: `Made of 100% preshrunk cotton. The colors Safety Green, Safety Orange, Safety Pink are 50% cotton/ 50% polyester.`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_3', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 3 about you or this item`, value: `Designed and printed in the USA.`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_4', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 4 about you or this item`, value: `Best Quality Fabric, Cozy Soft and Comfortable. This high quality product can be washed as you wish and exactly as you always wash your other cloths. From years of experience, we recommend to wash it inside-out with cold water and no dryer for best results.`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_5', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 5 about you or this item`, value: `Adult Women's Sizes. For best fit and easy way to choose your perfect size please refer to the picture we've created with the size chart and guide. Do not confuse with the size chart Amazon offers-  It's different than ours! If you need any more information or have any concerns or questions, please don't hesitate and contact us. We are always here for you!`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_6', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 6 about you or this item`, value: `Cool print- We are doing the best to offer the best, greatest trending graphics you can wear any place, any time. Each print comes on variety types of clothing to fit any occasion, any weather. We also accept special requests, feel free to contact us if you have something on your mind you want to create. We always think on the next hot graphic so don't forget to check us out from time to time!`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Bullet_Point_7', placeholder: 'Enter your Bullet Point',
 		hintLabel: `Point 7 about you or this item`, value: `***WE CARE about you and want to make sure our hard work will work for you! After selecting your size, make sure "sold by ALLNTRENDS" appears above the "Add to Cart" button. It doesn't? no worries! Just choose our name from the list below the buy box to make sure you will receive the original great product from us. ***`,
-		required: false, min: 0, max: 500
+		required: false, min: 0, max: 1500
 	},
 	{
 		type: EFieldType.TEXT, controlName: 'Keywords', placeholder: 'Enter your Keywords',

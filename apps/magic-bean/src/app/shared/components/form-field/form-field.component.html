@@ -5,9 +5,10 @@
 		<ng-container *ngSwitchCase="fieldType.NUMBER">
 			<input matInput
 					 #number
-					 [type]="type"
+					 type="number"
 					 [min]="min"
 					 [max]="max"
+					 [step]="step"
 					 [formControlName]="controlName"
 					 [placeholder]="placeholder"
 					 [required]="required">
@@ -23,7 +24,7 @@
 					 [placeholder]="placeholder"
 					 [required]="required">
 		</ng-container>
-		<!-- TEXT -->
+		<!-- EMAIL -->
 		<ng-container *ngSwitchCase="fieldType.EMAIL">
 			<input matInput
 					 #email

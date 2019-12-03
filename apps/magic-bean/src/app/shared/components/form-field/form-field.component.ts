@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, OnChanges, ChangeDetectorRef } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { FormGroup, Validators, ControlContainer, FormGroupDirective, AbstractControl, FormControl } from '@angular/forms';
 import { TFieldType } from './types/field-type.type';
 import { EFieldType } from './enums/field.-type.enum';
@@ -21,6 +21,7 @@ export class FormFieldComponent implements OnChanges {
 	@Input() required?: boolean;
 	@Input() min?: number;
 	@Input() max?: number;
+	@Input() step?: number;
 	@Input() hintLabel?: string;
 	@Input() value?: any;
 	@Input() disabled?: boolean;
@@ -28,35 +29,35 @@ export class FormFieldComponent implements OnChanges {
 	readonly fieldType = EFieldType;
 	control: AbstractControl;
 
-	constructor(private cDR: ChangeDetectorRef) { }
-
 	ngOnChanges(): void {
 		this.form.addControl(this.controlName, new FormControl())
 		this.control = this.form.controls[this.controlName];
 		this.setValidation();
 		this.control.patchValue(this.value);
+		if (this.control.invalid) {
+			this.control.markAsTouched();
+		}
 		if (this.disabled) {
 			this.control.disable();
 		}
 	}
-
 	private setValidation(): void {
 		const validators = [];
 		switch (this.type) {
 			case this.fieldType.TEXT:
 			case this.fieldType.EMAIL:
-				if (this.min) {
+				if (typeof this.min === 'number') {
 					validators.push(Validators.minLength(this.min));
 				}
-				if (this.max) {
+				if (typeof this.max === 'number') {
 					validators.push(Validators.maxLength(this.max));
 				}
 				break;
 			case this.fieldType.NUMBER:
-				if (this.min) {
+				if (typeof this.min === 'number') {
 					validators.push(Validators.min(this.min));
 				}
-				if (this.max) {
+				if (typeof this.max === 'number') {
 					validators.push(Validators.max(this.max));
 				}
 				break;
@@ -69,21 +70,21 @@ export class FormFieldComponent implements OnChanges {
 
 	getErrorMessage(): string {
 		const ctrlErrors = this.control.errors;
-		console.log(this.controlName, ctrlErrors);
-		const error = Object.keys(ctrlErrors)[0];
+		const error = ctrlErrors && Object.keys(ctrlErrors)[0],
+			errorObj = ctrlErrors && ctrlErrors[error];
 		let errorMessage: string;
 		switch (error) {
 			case 'min':
-				errorMessage = `Min value required is ${ctrlErrors[error][error]} `;
+				errorMessage = `Min value required is ${errorObj[error]}, you're ${Math.abs(errorObj.actual - errorObj.min)} under`;
 				break;
 			case 'max':
-				errorMessage = `Max value required is ${ctrlErrors[error][error]}`;
+				errorMessage = `Max value required is ${errorObj[error]}, you're ${errorObj.actual - errorObj.max} over`;
 				break;
 			case 'minlength':
-				errorMessage = `Min length required is ${ctrlErrors[error].requiredLength}`;
+				errorMessage = `Min length required is ${errorObj.requiredLength}, you're ${errorObj.requiredLength - errorObj.actualLength} letters short`;
 				break;
 			case 'maxlength':
-				errorMessage = `Max length required is ${ctrlErrors[error].requiredLength}`;
+				errorMessage = `Max length required is ${errorObj.requiredLength}, you're ${errorObj.actualLength - errorObj.requiredLength} letters over`;
 				break;
 			case 'required':
 				errorMessage = 'This field is required';

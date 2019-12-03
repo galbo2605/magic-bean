@@ -5,12 +5,12 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 
 import { ListItemModule } from './list-item/list-item.module';
-import { AppService } from './app.service';
 import { ormConfig } from './db/typeorm.config';
 import { AppController } from './app.controller';
 import { eDistPath } from './enum/dist-path.enum';
 import { TestModule } from './test/test.module';
 import { AmazonClothingItemModule } from './amazon-clothing-item/amazon-clothing-item.module';
+import { AppSubscriber } from './subscribers/app.subscriber';
 
 @Module({
 	imports: [
@@ -26,7 +26,7 @@ import { AmazonClothingItemModule } from './amazon-clothing-item/amazon-clothing
 		AppController,
 	],
 	providers: [
-		AppService,
+		AppSubscriber,
 	],
 })
 export class AppModule { }
