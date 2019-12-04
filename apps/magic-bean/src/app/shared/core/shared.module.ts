@@ -10,6 +10,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 	imports: [
 		CommonModule,
 		ReactiveFormsModule,
+		MaterialModules.MatBottomSheetModule,
 		MaterialModules.MatCardModule,
 		MaterialModules.MatIconModule,
 		MaterialModules.MatAutocompleteModule,
@@ -46,6 +47,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 		MaterialModules.MatOptionModule,
 	],
 	exports: [
+		MaterialModules.MatBottomSheetModule,
 		MaterialModules.MatCardModule,
 		MaterialModules.MatIconModule,
 		MaterialModules.MatAutocompleteModule,

@@ -92,7 +92,7 @@ export class SpeardSheetService {
 
 		/* generate workbook and add the worksheet */
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, fileName);
+		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
 
 		/* save to file */
 		XLSX.writeFile(wb, `${fileName}.${extention}`);

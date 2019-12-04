@@ -3,7 +3,7 @@ import { ApiRequestService } from '../shared/services/api-request.service';
 import { IRequest } from '../shared/interfaces/request.interface';
 import { EMethod } from '../shared/enums/method.enum.';
 import { IAction } from '../shared/interfaces/action.interface';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatBottomSheet, MatBottomSheetRef } from '@angular/material';
 import { take, switchMap } from 'rxjs/operators';
 import { TestFormComponent } from '../test-form/test-form.component';
 import { TableService } from '../shared/components/table/services/table.service';
@@ -35,13 +35,11 @@ export class TestComponent implements OnInit {
 		{ icon: 'edit', label: 'Edit', color: 'primary', type: 'edit' },
 		{ icon: 'delete', label: 'Delete', color: 'warn', type: 'delete' }
 	];
-	childActionItems: ITableActionItems[] = this.actionItems.filter(actionItem => actionItem.type !== 'expand');;
+	childActionItems: ITableActionItems[] = this.actionItems.filter(actionItem => actionItem.type !== 'expand');
 
-	fromDateValue: Date;
-	toDateValue: Date;
-	srcResult;
 	constructor(private apiReqSVC: ApiRequestService,
 		private dialog: MatDialog,
+		private bottomSheet: MatBottomSheet,
 		private testService: TestService,
 		private tableService: TableService,
 		private speardSheetSVC: SpeardSheetService) { }
@@ -49,16 +47,6 @@ export class TestComponent implements OnInit {
 	ngOnInit() {
 	}
 
-	onDateChange(range: 'min' | 'max', date: Date) {
-		switch (range) {
-			case 'min':
-				this.toDateValue = date;
-				break;
-			case 'max':
-				this.fromDateValue = date;
-				break;
-		}
-	}
 	actions(action?: IAction, tableName?: string): void {
 		console.log(action);
 		switch (action.type) {
@@ -107,11 +95,74 @@ export class TestComponent implements OnInit {
 				});
 			} break;
 			case 'Export':
-				this.testService.getImportRecords(this.fromDateValue, this.toDateValue).pipe(
+				this.bottomSheet.open(ExportComponent).afterDismissed().pipe(
 					take(1)
-				).subscribe(res => {
-					this.speardSheetSVC.export(res, 'Testsheet 1');
+				).subscribe(exportDates => {
+					if (exportDates) {
+						const { fromDate, toDate } = exportDates;
+						this.testService.getImportRecords(fromDate, toDate).pipe(
+							take(1)
+						).subscribe(res => {
+							this.speardSheetSVC.export(res, `Magic Bean Sheet - ${(<Date>fromDate).toDateString()} - ${(<Date>toDate).toDateString()}`);
+						});
+					}
 				});
+				break;
+		}
+	}
+}
+@Component({
+	selector: 'magic-bean-bottom-sheet-overview-example-sheet',
+	template: `<mat-form-field>
+						<input matInput
+								#fromDateInput
+								[matDatepicker]="fromDate"
+								[max]="toDateValue"
+								(dateInput)="onDateChange('max', $event.value)"
+								placeholder="From Date"
+								disabled>
+						<mat-datepicker-toggle matSuffix
+													[for]="fromDate"></mat-datepicker-toggle>
+						<mat-datepicker #fromDate
+											disabled="false"></mat-datepicker>
+					</mat-form-field>
+					<mat-form-field>
+						<input matInput
+								#toDateInput
+								[min]="fromDateValue"
+								[matDatepicker]="toDate"
+								(dateInput)="onDateChange('min', $event.value)"
+								placeholder="To Date"
+								disabled>
+						<mat-datepicker-toggle matSuffix
+													[for]="toDate"></mat-datepicker-toggle>
+						<mat-datepicker #toDate
+											disabled="false"></mat-datepicker>
+					</mat-form-field>
+					
+					<magic-bean-button (btnClick)="openLink()"
+											label="Confirm"></magic-bean-button>`
+})
+export class ExportComponent {
+
+	fromDateValue: Date;
+	toDateValue: Date;
+	constructor(private _bottomSheetRef: MatBottomSheetRef<ExportComponent>) { }
+
+	openLink(event?: MouseEvent): void {
+		this._bottomSheetRef.dismiss({ fromDate: this.fromDateValue, toDate: this.toDateValue });
+		if (event) {
+			event.preventDefault();
+		}
+	}
+
+	onDateChange(range: 'min' | 'max', date: Date) {
+		switch (range) {
+			case 'min':
+				this.toDateValue = date;
+				break;
+			case 'max':
+				this.fromDateValue = date;
 				break;
 		}
 	}
