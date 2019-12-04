@@ -44,6 +44,18 @@ export class AmazonClothingItemController {
 			return error;
 		}
 	}
+	
+	@Post('export')
+	async export(@Body() body: any): Promise<AmazonClothingItemEntity[]> {
+		try {
+			const records = await this.amazonClothingItemSVC.findByDates(body.fromDate, body.toDate);
+			return records;
+		} catch (error) {
+			console.log(error);
+			return error;
+		}
+	}
+
 	@Post('createOne')
 	async createOne(@Body() body: any): Promise<AmazonClothingItemEntity> {
 		try {

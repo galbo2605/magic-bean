@@ -30,6 +30,7 @@ export class SpeardSheetService {
 
 				/* save data */
 				const data = <AOA>(XLSX.utils.sheet_to_json(ws, { header: 1 }));
+				console.log(data);
 				const colMap = {
 					'Seller SKU': 'SKU',
 					'Product Name': 'Title',
@@ -85,15 +86,15 @@ export class SpeardSheetService {
 		}).catch(e => e));
 	}
 
-	export(data: AOA = [[]], fileName: string = 'SheetJS.xlsx'): void {
+	export(data: any[], fileName: string = 'SheetJS', extention = 'xlsx'): void {
 		/* generate worksheet */
-		const ws: XLSX.WorkSheet = XLSX.utils.aoa_to_sheet(data);
+		const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(data);
 
 		/* generate workbook and add the worksheet */
 		const wb: XLSX.WorkBook = XLSX.utils.book_new();
-		XLSX.utils.book_append_sheet(wb, ws, 'Sheet1');
+		XLSX.utils.book_append_sheet(wb, ws, fileName);
 
 		/* save to file */
-		XLSX.writeFile(wb, fileName);
+		XLSX.writeFile(wb, `${fileName}.${extention}`);
 	}
 }

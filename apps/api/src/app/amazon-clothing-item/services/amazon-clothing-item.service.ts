@@ -40,6 +40,17 @@ export class AmazonClothingItemService {
 		});
 	}
 
+	async findByDates(fromDate: Date, toDate: Date): Promise<AmazonClothingItemEntity[]> {
+		return await this.amazonClothingItemRepository.find({
+			where: {
+				First_Created: {
+					$gte: new Date(fromDate),
+					$lt: new Date(toDate)
+				}
+			}
+		})
+	}
+
 	async createMany(amazonClothingItems: IAmazonClothingItem[]): Promise<string> {
 		try {
 			// this.amazonClothingItemRepository.save(amazonClothingItems);

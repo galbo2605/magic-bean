@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
 import { ApiRequestService } from '../shared/services/api-request.service';
 import { IRequest } from '../shared/interfaces/request.interface';
 import { EMethod } from '../shared/enums/method.enum.';
@@ -37,6 +37,9 @@ export class TestComponent implements OnInit {
 	];
 	childActionItems: ITableActionItems[] = this.actionItems.filter(actionItem => actionItem.type !== 'expand');;
 
+	fromDateValue: Date;
+	toDateValue: Date;
+	srcResult;
 	constructor(private apiReqSVC: ApiRequestService,
 		private dialog: MatDialog,
 		private testService: TestService,
@@ -46,6 +49,16 @@ export class TestComponent implements OnInit {
 	ngOnInit() {
 	}
 
+	onDateChange(range: 'min' | 'max', date: Date) {
+		switch (range) {
+			case 'min':
+				this.toDateValue = date;
+				break;
+			case 'max':
+				this.fromDateValue = date;
+				break;
+		}
+	}
 	actions(action?: IAction, tableName?: string): void {
 		console.log(action);
 		switch (action.type) {
@@ -61,8 +74,8 @@ export class TestComponent implements OnInit {
 					console.log(`Dialog result`, res);
 					switch (res.type) {
 						case 'save':
-							const saveType = action.type === 'edit' ? 'updateOne' : 'createOne';
-							this.testService.update(res.payload, tableName);
+							const saveType = action.type === 'edit' ? 'update' : 'create';
+							this.testService[saveType](res.payload, tableName);
 							break;
 						default:
 							break;
@@ -93,8 +106,12 @@ export class TestComponent implements OnInit {
 					this.tableService.readRows(null, 'parentTable');
 				});
 			} break;
-			case 'Export Excel':
-				this.speardSheetSVC.export();
+			case 'Export':
+				this.testService.getImportRecords(this.fromDateValue, this.toDateValue).pipe(
+					take(1)
+				).subscribe(res => {
+					this.speardSheetSVC.export(res, 'Testsheet 1');
+				});
 				break;
 		}
 	}

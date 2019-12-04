@@ -16,6 +16,15 @@ export class TestService {
 		return this.apiReqSVC.request(request).pipe(take(1));
 	}
 
+	getImportRecords(fromDate: Date, toDate: Date): Observable<IAmazonClothingItem[]> {
+		const exportRequest: IRequest = {
+			path: `amazon-clothing-item/export`,
+			method: EMethod.POST,
+			body: { fromDate, toDate }
+		};
+		return this.sendRequest(exportRequest);
+	}
+
 	create(amazonClothingItem: IAmazonClothingItem, tableName?: string): void {
 		const saveRequest: IRequest = {
 			path: `amazon-clothing-item/updateOne`,
