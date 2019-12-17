@@ -46,6 +46,7 @@
 			</mat-select>
 		</ng-container>
 	</ng-container>
-	<mat-hint align="end">{{getHint()}}</mat-hint>
+	<mat-hint *ngIf="getHint() as hint"
+				 align="end">{{hint}}</mat-hint>
 	<mat-error *ngIf="control?.invalid">{{getErrorMessage()}}</mat-error>
 </mat-form-field>

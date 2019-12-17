@@ -64,7 +64,7 @@
 							 class="expandable-cell">
 					<div [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
 						<ng-container *ngTemplateOutlet="expandableContentTmpl, 
-										context: {$implicit: row, isExpanded: expandedElement === row}"></ng-container>
+											context: {$implicit: row, isExpanded: expandedElement === row}"></ng-container>
 					</div>
 				</mat-cell>
 			</ng-container>

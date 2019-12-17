@@ -1,0 +1,29 @@
+<mat-form-field>
+	<input matInput
+			 #fromDateInput
+			 [matDatepicker]="fromDate"
+			 [max]="toDateValue"
+			 (dateInput)="onDateChange('max', $event.value)"
+			 placeholder="From Date"
+			 disabled>
+	<mat-datepicker-toggle matSuffix
+								  [for]="fromDate"></mat-datepicker-toggle>
+	<mat-datepicker #fromDate
+						 disabled="false"></mat-datepicker>
+</mat-form-field>
+<mat-form-field>
+	<input matInput
+			 #toDateInput
+			 [min]="fromDateValue"
+			 [matDatepicker]="toDate"
+			 (dateInput)="onDateChange('min', $event.value)"
+			 placeholder="To Date"
+			 disabled>
+	<mat-datepicker-toggle matSuffix
+								  [for]="toDate"></mat-datepicker-toggle>
+	<mat-datepicker #toDate
+						 disabled="false"></mat-datepicker>
+</mat-form-field>
+
+<magic-bean-button (btnClick)="openLink()"
+						 label="Confirm"></magic-bean-button>

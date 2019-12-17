@@ -10,6 +10,7 @@ import { TableService } from '../shared/components/table/services/table.service'
 import { ITableActionItems } from '../shared/components/table/interfaces/table-action-items.interfaces';
 import { SpeardSheetService } from '../shared/services/spreadsheet.service';
 import { TestService } from './services/test.service';
+import { ExportComponent } from '../shared/components/export/export.component';
 
 @Component({
 	selector: 'magic-bean-test',
@@ -107,62 +108,6 @@ export class TestComponent implements OnInit {
 						});
 					}
 				});
-				break;
-		}
-	}
-}
-@Component({
-	selector: 'magic-bean-bottom-sheet-overview-example-sheet',
-	template: `<mat-form-field>
-						<input matInput
-								#fromDateInput
-								[matDatepicker]="fromDate"
-								[max]="toDateValue"
-								(dateInput)="onDateChange('max', $event.value)"
-								placeholder="From Date"
-								disabled>
-						<mat-datepicker-toggle matSuffix
-													[for]="fromDate"></mat-datepicker-toggle>
-						<mat-datepicker #fromDate
-											disabled="false"></mat-datepicker>
-					</mat-form-field>
-					<mat-form-field>
-						<input matInput
-								#toDateInput
-								[min]="fromDateValue"
-								[matDatepicker]="toDate"
-								(dateInput)="onDateChange('min', $event.value)"
-								placeholder="To Date"
-								disabled>
-						<mat-datepicker-toggle matSuffix
-													[for]="toDate"></mat-datepicker-toggle>
-						<mat-datepicker #toDate
-											disabled="false"></mat-datepicker>
-					</mat-form-field>
-					
-					<magic-bean-button (btnClick)="openLink()"
-											label="Confirm"></magic-bean-button>`
-})
-export class ExportComponent {
-
-	fromDateValue: Date;
-	toDateValue: Date;
-	constructor(private _bottomSheetRef: MatBottomSheetRef<ExportComponent>) { }
-
-	openLink(event?: MouseEvent): void {
-		this._bottomSheetRef.dismiss({ fromDate: this.fromDateValue, toDate: this.toDateValue });
-		if (event) {
-			event.preventDefault();
-		}
-	}
-
-	onDateChange(range: 'min' | 'max', date: Date) {
-		switch (range) {
-			case 'min':
-				this.toDateValue = date;
-				break;
-			case 'max':
-				this.fromDateValue = date;
 				break;
 		}
 	}

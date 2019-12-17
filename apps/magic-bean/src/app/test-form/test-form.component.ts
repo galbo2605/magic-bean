@@ -1,26 +1,53 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup } from '@angular/forms';
 import { EFieldType } from '../shared/components/form-field/enums/field.-type.enum';
 import { IField } from '../shared/components/form-field/interfaces/field.interface';
+import { SafeStyle, DomSanitizer } from '@angular/platform-browser';
+import { Subject } from 'rxjs';
+import { debounceTime, combineLatest, takeUntil, switchMapTo } from 'rxjs/operators';
 
+const bigStep = 5;
+const smallStep = 1;
 @Component({
 	selector: 'magic-bean-test-form',
 	templateUrl: './test-form.component.html',
-	styleUrls: ['./test-form.component.css'],
+	styleUrls: ['./test-form.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TestFormComponent implements OnInit {
 	formGroup: FormGroup = new FormGroup({});
 
 	fields: IField[] = clothingFields;
+	transform3DImage: SafeStyle | undefined;
+	rotx = 0;
+	roty = 0;
+	rotz = 0;
+	extras = '';
 
+	mouseDown = new Subject<MouseEvent>();
+	mouseMove = new Subject<MouseEvent>();
+	mouseUp = new Subject<MouseEvent>();
+	mouseLeave = new Subject<MouseEvent>();
+	mouseXClickLocation: number;
 	constructor(
 		public dialogRef: MatDialogRef<TestFormComponent>,
+		private sanitizer: DomSanitizer,
 		@Inject(MAT_DIALOG_DATA) public data: any) { }
 
 	ngOnInit(): void {
+		this.calculateTransformations();
 		console.log(this.data);
+
+		this.mouseDown.pipe(
+			switchMapTo(this.mouseMove.pipe(
+				takeUntil(this.mouseUp),
+				takeUntil(this.mouseLeave),
+			)),
+			// debounceTime(100)
+		).subscribe(mouseMove => {
+			this.rotate(mouseMove);
+		});
 	}
 
 	onSave(): void {
@@ -33,13 +60,101 @@ export class TestFormComponent implements OnInit {
 		console.log(this.formGroup);
 		this.dialogRef.close({ type: 'close', payload: 'close' });
 	}
+
+	rotate(event: MouseEvent) {
+		console.log('rotating', event);
+		const mouseXMoveLocation = event.clientX;
+		const mouseXDistance = this.mouseXClickLocation - mouseXMoveLocation;
+		console.log('mouseXDistance', mouseXDistance);
+		const step = event.shiftKey ? bigStep : smallStep;
+		this.roty = mouseXDistance;
+
+		switch (event.type) {
+
+			// Reset everything back to the start state
+			//
+			case 'Space': {
+				this.rotx = 0;
+				this.roty = 0;
+				this.rotz = 0;
+				this.extras = '';
+			} break;
+
+			// Rotate around X, Y, and Z axes, in big or small increments
+			//
+			case 'ArrowUp': {
+				this.rotx += step;
+			} break;
+			case 'ArrowDown': {
+				this.rotx -= step;
+			} break;
+			case 'ArrowLeft': {
+				this.roty -= step;
+			} break;
+			case 'ArrowRight': {
+				this.roty += step;
+			} break;
+			case 'KeyZ': {
+				this.rotz -= step;
+			} break;
+			case 'KeyX': {
+				this.rotz += step;
+			} break;
+
+			// Get funky
+			case 'KeyD': {
+				this.extras = this.extras ? '' : 'disco';
+			} break;
+		}
+
+		this.calculateTransformations();
+	}
+
+	calculateTransformations() {
+		const rotation = ` rotateX(${this.rotx}deg) rotateY(${this.roty}deg) rotateZ(${this.rotz}deg) perspective(1000px)`;
+		console.log(rotation);
+		this.transform3DImage = this.sanitizer.bypassSecurityTrustStyle(rotation);
+		console.log(this.transform3DImage);
+	}
+
+	getImage2Transform(): SafeStyle {
+		return this.sanitizer.bypassSecurityTrustStyle(` rotateX(0deg) rotateY(${this.roty + 90}deg) rotateZ(0deg) perspective(1000px)`);
+	}
+	getImage3Transform(): SafeStyle {
+		return this.sanitizer.bypassSecurityTrustStyle(` rotateX(0deg) rotateY(${(this.roty -  180)}deg) rotateZ(0deg) perspective(1000px)`);
+	}
+	getImage4Transform(): SafeStyle {
+		return this.sanitizer.bypassSecurityTrustStyle(` rotateX(0deg) rotateY(${this.roty - 90}deg) rotateZ(0deg) perspective(1000px)`);
+	}
+
+	@HostListener('mousedown', ['$event'])
+	onMouseDown(event: MouseEvent) {
+		console.log('mousedown', event);
+		this.mouseXClickLocation = event.clientX;
+		this.mouseDown.next(event);
+	}
+
+	@HostListener('mousemove', ['$event'])
+	onMouseMove(event: MouseEvent) {
+		this.mouseMove.next(event);
+	}
+
+	@HostListener('mouseup', ['$event'])
+	onMouseUp(event: MouseEvent) {
+		this.mouseUp.next(event);
+	}
+
+	@HostListener('mouseleave', ['$event'])
+	onMouseLeave(event: MouseEvent) {
+		this.mouseLeave.next(event);
+	}
 }
 
 
 export const clothingFields: IField[] = [
 	{
 		type: EFieldType.TEXT, controlName: 'SKU', placeholder: 'Enter your SKU',
-		hintLabel: `Your item's serial number`, value: `Allntrends-X44-CM1-8001-P`,
+		hintLabel: `Your custom item code/serial`, value: `Allntrends-X44-CM1-8001-P`,
 		required: true, min: 10, max: 99
 	},
 	{
@@ -59,7 +174,7 @@ export const clothingFields: IField[] = [
 	},
 	{
 		type: EFieldType.DROPDOWN, controlName: 'Item_Type', placeholder: `Choose your Item-Type`,
-		hintLabel: `Category of your item`, value: `T-Shirt`,
+		hintLabel: `Category of your item`, hintMessage: `Here's the dropdown arrow ^`, value: `T-Shirt`,
 		required: true,
 		options: [`T-Shirt`, `Tank-Top`, `Hoodie`, `Sweaters`, `Sweatshirts`]
 	},

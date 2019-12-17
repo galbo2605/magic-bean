@@ -6,7 +6,7 @@ import { EFieldType } from './enums/field.-type.enum';
 @Component({
 	selector: 'magic-bean-form-field',
 	templateUrl: './form-field.component.html',
-	styleUrls: ['./form-field.component.css'],
+	styleUrls: ['./form-field.component.scss'],
 	viewProviders: [
 		/** gets the form group from the parent component - registering the `formControlName`s */
 		{ provide: ControlContainer, useExisting: FormGroupDirective },
@@ -23,18 +23,20 @@ export class FormFieldComponent implements OnChanges {
 	@Input() max?: number;
 	@Input() step?: number;
 	@Input() hintLabel?: string;
+	@Input() hintMessage?: string;
 	@Input() value?: any;
 	@Input() disabled?: boolean;
 	@Input() options: any[];
 	readonly fieldType = EFieldType;
 	control: AbstractControl;
+	errorMessage: string;
 
 	ngOnChanges(): void {
 		this.form.addControl(this.controlName, new FormControl())
 		this.control = this.form.controls[this.controlName];
 		this.setValidation();
 		this.control.patchValue(this.value);
-		if (this.control.invalid) {
+		if (this.value && this.control.invalid) {
 			this.control.markAsTouched();
 		}
 		if (this.disabled) {
@@ -72,51 +74,46 @@ export class FormFieldComponent implements OnChanges {
 		const ctrlErrors = this.control.errors;
 		const error = ctrlErrors && Object.keys(ctrlErrors)[0],
 			errorObj = ctrlErrors && ctrlErrors[error];
-		let errorMessage: string;
 		switch (error) {
 			case 'min':
-				errorMessage = `Min value required is ${errorObj[error]}, you're ${Math.abs(errorObj.actual - errorObj.min)} under`;
+				this.errorMessage = `Min value required is ${errorObj[error]}, you're ${Math.abs(errorObj.actual - errorObj.min)} under`;
 				break;
 			case 'max':
-				errorMessage = `Max value required is ${errorObj[error]}, you're ${errorObj.actual - errorObj.max} over`;
+				this.errorMessage = `Max value required is ${errorObj[error]}, you're ${errorObj.actual - errorObj.max} over`;
 				break;
 			case 'minlength':
-				errorMessage = `Min length required is ${errorObj.requiredLength}, you're ${errorObj.requiredLength - errorObj.actualLength} letters short`;
+				this.errorMessage = `Min length required is ${errorObj.requiredLength}, you're ${errorObj.requiredLength - errorObj.actualLength} letters short`;
 				break;
 			case 'maxlength':
-				errorMessage = `Max length required is ${errorObj.requiredLength}, you're ${errorObj.actualLength - errorObj.requiredLength} letters over`;
+				this.errorMessage = `Max length required is ${errorObj.requiredLength}, you're ${errorObj.actualLength - errorObj.requiredLength} letters over`;
 				break;
 			case 'required':
-				errorMessage = 'This field is required';
+				this.errorMessage = 'This field is required';
 				break;
 			case 'email':
-				errorMessage = 'Not a valid email';
+				this.errorMessage = 'Not a valid email';
 				break;
 			default:
-				errorMessage = '';
+				this.errorMessage = '';
 				break;
 		}
-		return errorMessage;
+		return this.errorMessage;
 	}
 
 	getHint(): string {
-		let hintMessage: string;
 		const controlValue = this.control.value || '';
 		switch (this.type) {
 			case this.fieldType.NUMBER:
-				hintMessage = `${controlValue || this.min}${this.max ? `-${this.max}` : ''}`;
+				this.hintMessage = `${controlValue || this.min}${this.max ? `-${this.max}` : ''}`;
 				break;
 			case this.fieldType.TEXT:
 			case this.fieldType.EMAIL:
-				hintMessage = `${controlValue.length || this.min}${this.max ? `/${this.max}` : ''}`;
-				break;
-			case this.fieldType.DROPDOWN:
-				hintMessage = `Here's the dropdown arrow ^`;
-				break;
-			default:
-				hintMessage = '';
+				this.hintMessage = `${controlValue.length || this.min}${this.max ? `/${this.max}` : ''}`;
 				break;
 		}
-		return hintMessage;
+		if (this.hintMessage === 'undefined') {
+			this.hintMessage = '';
+		}
+		return this.hintMessage;
 	}
 }

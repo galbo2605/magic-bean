@@ -8,7 +8,7 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { SharedModule } from './shared/core/shared.module';
-import { TestComponent, ExportComponent } from './test/test.component';
+import { TestComponent } from './test/test.component';
 import { RequestInterceptor } from './request.interceptor';
 import { TestFormComponent } from './test-form/test-form.component';
 
@@ -17,7 +17,6 @@ import { TestFormComponent } from './test-form/test-form.component';
 		AppComponent,
 		TestComponent,
 		TestFormComponent,
-		ExportComponent
 	],
 	imports: [
 		BrowserModule,
@@ -30,7 +29,7 @@ import { TestFormComponent } from './test-form/test-form.component';
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }
 	],
-	entryComponents: [TestFormComponent, ExportComponent],
+	entryComponents: [TestFormComponent],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }

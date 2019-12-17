@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonComponent } from '../components/button/button.component';
 import { FormFieldComponent } from '../components/form-field/form-field.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ExportComponent } from '../components/export/export.component';
 
 @NgModule({
 	imports: [
@@ -90,6 +91,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 		TableComponent,
 		ButtonComponent,
 		FormFieldComponent,
+		ExportComponent
+	],
+	entryComponents: [
+		ExportComponent
 	]
 })
 export class SharedModule { }
