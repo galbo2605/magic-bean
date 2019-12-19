@@ -1,0 +1,22 @@
+<div class="cube">
+	<div [class]="'side front'"
+		  [style.transform]="transformFront">
+		<div class="guides"></div>
+		<ng-container *ngTemplateOutlet="frontContentTmpl"></ng-container>
+	</div>
+	<div [class]="'side right'"
+		  [style.transform]="transformRight">
+		<div class="guides"></div>
+		<ng-container *ngTemplateOutlet="rightContentTmpl"></ng-container>
+	</div>
+	<div [class]="'side back'"
+		  [style.transform]="transformBack">
+		<div class="guides"></div>
+		<ng-container *ngTemplateOutlet="backContentTmpl"></ng-container>
+	</div>
+	<div [class]="'side left'"
+		  [style.transform]="transformLeft">
+		<div class="guides"></div>
+		<ng-container *ngTemplateOutlet="leftContentTmpl"></ng-container>
+	</div>
+</div>

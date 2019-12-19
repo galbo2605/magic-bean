@@ -6,68 +6,44 @@
 			<mat-card-title>{{formGroup?.controls?.Title?.value}}</mat-card-title>
 			<mat-card-subtitle>{{formGroup?.controls?.Price?.value}}</mat-card-subtitle>
 		</mat-card-header>
-		<div class="scene">
-			<div class="cube">
-				<div class="side front"
-					  [style.transform]="transform3DImage">
-					<div class="guides"></div>
-					<img class="product-image"
-						  draggable="false"
-						  *ngIf="formGroup?.controls?.Main_Image?.value as mainImage"
-						  [src]="mainImage"
-						  alt="Main Image">
-					<span>Main Image</span>
-				</div>
-				<div class="side right"
-					  [style.transform]="getImage2Transform()">
-					<div class="guides"></div>
-					<img class="product-image"
-						  draggable="false"
-						  *ngIf="formGroup?.controls?.Image2?.value as image2"
-						  [src]="image2"
-						  alt="Image 2">
-					<span>Image 2</span>
-				</div>
-				<div class="side back"
-					  [style.transform]="getImage3Transform()">
-					<div class="guides"></div>
-					<img class="product-image"
-						  draggable="false"
-						  *ngIf="formGroup?.controls?.Image3?.value as image3"
-						  [src]="image3"
-						  alt="Image 3">
-					<span>Image 3</span>
-				</div>
-				<div class="side left"
-					  [style.transform]="getImage4Transform()">
-					<div class="guides"></div>
-					<img class="product-image"
-						  draggable="false"
-						  *ngIf="formGroup?.controls?.Image4?.value as image4"
-						  [src]="image4"
-						  alt="Image 4">
-					<span>Image 3</span>
-				</div>
-			</div>
-		</div>
-		<div *ngIf="false"
-			  draggable="false"
-			  class="product-images">
-			<img class="product-image back"
-				  draggable="false"
-				  mat-card-image
-				  *ngIf="formGroup?.controls?.Image3?.value as image3"
-				  [src]="image3"
-				  alt="Image 3"
-				  [style.transform]="transform3DImage">
-			<img class="product-image left"
-				  draggable="false"
-				  mat-card-image
-				  *ngIf="formGroup?.controls?.Image4?.value as image4"
-				  [src]="image4"
-				  alt="Image 4"
-				  [style.transform]="transform3DImage">
-		</div>
+		<magic-bean-rotating-cube>
+			<ng-template #front
+							 let-front>
+				<img class="product-image"
+					  draggable="false"
+					  *ngIf="formGroup?.controls?.Main_Image?.value as mainImage"
+					  [src]="mainImage"
+					  alt="Main Image">
+				<span class="image-label">Main Image</span>
+			</ng-template>
+			<ng-template #right
+							 let-right>
+				<img class="product-image"
+					  draggable="false"
+					  *ngIf="formGroup?.controls?.Image2?.value as image2"
+					  [src]="image2"
+					  alt="Image 2">
+				<span class="image-label">Image 2</span>
+			</ng-template>
+			<ng-template #back
+							 let-back>
+				<img class="product-image"
+					  draggable="false"
+					  *ngIf="formGroup?.controls?.Image3?.value as image3"
+					  [src]="image3"
+					  alt="Image 3">
+				<span class="image-label">Image 3</span>
+			</ng-template>
+			<ng-template #left
+							 let-left>
+				<img class="product-image"
+					  draggable="false"
+					  *ngIf="formGroup?.controls?.Image4?.value as image4"
+					  [src]="image4"
+					  alt="Image 4">
+				<span class="image-label">Image 4</span>
+			</ng-template>
+		</magic-bean-rotating-cube>
 		<div class="product-details">
 			<p *ngIf="formGroup?.controls?.Description?.value as desc">{{desc}}</p>
 			<ul>
