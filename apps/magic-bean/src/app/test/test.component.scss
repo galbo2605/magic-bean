@@ -5,6 +5,7 @@
     'testHeaderArea'
     'testTableArea';
   justify-items: center;
+  overflow: auto;
 }
 
 .test-header {
@@ -16,4 +17,14 @@
   grid-row: span 9;
   width: 100%;
   height: 100%;
+}
+
+.child-table {
+	margin: 1rem;
+	padding: 1rem;
+	overflow: auto;
+	box-shadow: 2px 0px 7px 0px rgba(0, 0, 0, 0.5);
+	width: calc(100vw - 10rem);
+	height: 100%;
+	z-index: 0;
 }

@@ -69,7 +69,7 @@ export class TableService {
 		return this.sendRequest(request).pipe(
 			map(columns => {
 				const columnIDs: string[] = columns.map(col => col.id);
-				columnIDs.push('star');
+				columnIDs.push('actions');
 				return { columns, columnIDs }
 			})
 		)
@@ -83,7 +83,8 @@ export class TableService {
 		this.sendRequest(request).pipe(
 			take(1),
 		).subscribe(res => {
-			this._dataSource$.next({ [tableName]: res });
+			const tableDataSources = this._dataSource$.getValue();
+			this._dataSource$.next({ ...tableDataSources, [tableName]: res });
 		});
 	}
 }

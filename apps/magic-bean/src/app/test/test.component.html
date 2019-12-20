@@ -22,15 +22,19 @@
 						(action)="actions($event, 'parentTable')">
 	<ng-template #expandableContent
 					 let-row
-					 let-isExpanded="isExpanded">
-		<magic-bean-table *ngIf="isExpanded"
-								class="test-table"
-								tableName="childTable"
-								[colRequest]="colRequest"
-								[dataRequest]="childrenDataRequest"
-								[actionItems]="childActionItems"
-								(action)="actions($event, 'childTable')"
-								child="true"></magic-bean-table>
+					 let-isExpanded="isExpanded"
+					 let-containerHeight="containerHeight">
+		<div *ngIf="isExpanded"
+			  class="child-table"
+			  [style.height]="containerHeight - 175 + 'px'">
+			<magic-bean-table class="test-table"
+									tableName="childTable"
+									[colRequest]="colRequest"
+									[dataRequest]="childrenDataRequest"
+									[actionItems]="childActionItems"
+									(action)="actions($event, 'childTable')"
+									child="true"></magic-bean-table>
+		</div>
 	</ng-template>
 
 </magic-bean-table>

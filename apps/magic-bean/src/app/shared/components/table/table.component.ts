@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, SimpleChanges, OnChanges, Output, ViewChild, ElementRef, AfterViewInit, TemplateRef, ContentChild, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, SimpleChanges, OnChanges, Output, ViewChild, ElementRef, AfterViewInit, TemplateRef, ContentChild, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ITableColumns } from './interfaces/table-column.interface';
 import { Subject, fromEvent, Observable } from 'rxjs';
 import { IAction } from '../../interfaces/action.interface';
@@ -30,8 +30,6 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 	@Input() actionItems: ITableActionItems[]
 	@Input() child: boolean;
 	@Output() action = new Subject<IAction>();
-
-	@HostBinding('style.position') position: string;
 
 	@ViewChild(MatTable, { static: false }) matTable: MatTable<any>;
 	@ViewChild('filterInput', { static: true }) filterInput: ElementRef;
@@ -85,7 +83,6 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 
 	ngOnChanges(changes: SimpleChanges): void {
 		console.log(changes);
-		this.position = this.child ? 'unset' : 'relative';
 	}
 
 	ngAfterViewInit(): void {
@@ -95,7 +92,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 	ngOnDestroy(): void {
 		this.componentActive = false;
 	}
-
+	
 	initTable(): void {
 		if (this.actionItems) {
 			this.shouldExpand = !!this.actionItems.find(actionItem => actionItem.type === 'expand');

@@ -13,7 +13,7 @@ export class TestService {
 	constructor(private apiReqSVC: ApiRequestService, private tableService: TableService) { }
 
 	private sendRequest(request: IRequest): Observable<any> {
-		return this.apiReqSVC.request(request).pipe(take(1));
+		return this.apiReqSVC.request(request);
 	}
 
 	getImportRecords(fromDate: Date, toDate: Date): Observable<IAmazonClothingItem[]> {
@@ -31,7 +31,7 @@ export class TestService {
 			method: EMethod.POST,
 			body: amazonClothingItem
 		};
-		this.sendRequest(saveRequest).subscribe((savedItem: IAmazonClothingItem) => {
+		this.sendRequest(saveRequest).pipe(take(1)).subscribe((savedItem: IAmazonClothingItem) => {
 			console.log('api response: ', savedItem);
 			this.tableService.readRows(null, 'parentTable');
 		});
@@ -43,7 +43,7 @@ export class TestService {
 			method: EMethod.POST,
 			body: amazonClothingItem
 		};
-		this.sendRequest(saveRequest).subscribe((savedItem: string) => {
+		this.sendRequest(saveRequest).pipe(take(1)).subscribe((savedItem: string) => {
 			console.log('api response: ', savedItem);
 			this.tableService.updateRow('UID', amazonClothingItem.UID, amazonClothingItem, tableName);
 		});
@@ -55,7 +55,7 @@ export class TestService {
 			method: EMethod.POST,
 			body: amazonClothingItem
 		};
-		this.sendRequest(deleteRequest).subscribe(res => {
+		this.sendRequest(deleteRequest).pipe(take(1)).subscribe(res => {
 			console.log(res);
 			this.tableService.readRows(null, 'parentTable');
 		});

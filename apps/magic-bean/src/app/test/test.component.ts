@@ -47,7 +47,7 @@ export class TestComponent implements OnInit {
 
 	ngOnInit() {
 	}
-
+	
 	actions(action?: IAction, tableName?: string): void {
 		console.log(action);
 		switch (action.type) {

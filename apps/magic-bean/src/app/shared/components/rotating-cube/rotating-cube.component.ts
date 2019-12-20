@@ -75,7 +75,6 @@ export class RotatingCubeComponent implements OnInit {
 	}
 
 	rotate(event: MouseEvent): void {
-		console.log('rotating', event);
 		const mouseXMoveLocation = event.clientX;
 		this.mouseXDistance = mouseXMoveLocation - this.mouseXClickLocation;
 		const mouseXDistancePixelDifference = this.mouseXDistance - this.mouseXPrevDistance;
