@@ -63,21 +63,26 @@
 								  sticky>
 					<mat-cell *matCellDef="let row"
 								 class="expandable-cell">
-						<div [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
-							<ng-container
-											  *ngTemplateOutlet="expandableContentTmpl, 
+						<div class="child-expand"
+							  [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'">
+							<div class="child-container"
+								  [style.height]="tableContainer.clientHeight - 175 + 'px'">
+								<ng-container
+												  *ngTemplateOutlet="expandableContentTmpl, 
 											context: {$implicit: row, isExpanded: expandedElement === row, containerHeight: tableContainer.clientHeight}">
-							</ng-container>
+								</ng-container>
+							</div>
 						</div>
 					</mat-cell>
 				</ng-container>
 
 				<mat-header-row *matHeaderRowDef="colRes.columnIDs; sticky: true"></mat-header-row>
 				<mat-row *matRowDef="let row; columns: colRes.columnIDs;"
+							[class.expanded-row]="expandedElement === row"
 							(click)="sendAction('table-row', row)"></mat-row>
 				<ng-container *ngIf="shouldExpand">
 					<mat-row *matRowDef="let row; columns: ['expandedDetail']"
-								[style.display]="expandedElement === row ? 'flex' : 'none'"></mat-row>
+								class="expandable-row"></mat-row>
 				</ng-container>
 			</mat-table>
 		</ng-container>

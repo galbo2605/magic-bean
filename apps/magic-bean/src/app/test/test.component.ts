@@ -47,7 +47,7 @@ export class TestComponent implements OnInit {
 
 	ngOnInit() {
 	}
-	
+
 	actions(action?: IAction, tableName?: string): void {
 		console.log(action);
 		switch (action.type) {
@@ -79,7 +79,7 @@ export class TestComponent implements OnInit {
 				break;
 			case 'import': {
 				const file = action.payload;
-				this.tableService.isLoadingResults$.next({ parentTable: true });
+				this.tableService.shouldLoadTable('parentTable', true);
 				this.speardSheetSVC.getDataFromFile(file).pipe(
 					switchMap(data => {
 						const saveRequest: IRequest = {

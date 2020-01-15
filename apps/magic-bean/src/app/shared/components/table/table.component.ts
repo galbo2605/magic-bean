@@ -19,7 +19,7 @@ import { takeWhile, filter } from 'rxjs/operators';
 		trigger('detailExpand', [
 			state('collapsed', style({ height: '0px', minHeight: '0' })),
 			state('expanded', style({ height: '*' })),
-			transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+			transition('expanded <=> collapsed', animate('325ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
 		]),
 	],
 })
@@ -90,9 +90,12 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 	}
 
 	ngOnDestroy(): void {
+		this.tableService.dataSource$.pipe(
+			takeWhile(() => this.componentActive)
+		).subscribe(ds => delete ds[this.tableName]);
 		this.componentActive = false;
 	}
-	
+
 	initTable(): void {
 		if (this.actionItems) {
 			this.shouldExpand = !!this.actionItems.find(actionItem => actionItem.type === 'expand');

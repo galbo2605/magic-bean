@@ -14,7 +14,7 @@
 							 (btnClick)="actions($event)"
 							 label="Export"></magic-bean-button>
 </div>
-<magic-bean-table class="test-table"
+<magic-bean-table class="parent-table"
 						tableName="parentTable"
 						[colRequest]="colRequest"
 						[dataRequest]="dataRequest"
@@ -24,17 +24,17 @@
 					 let-row
 					 let-isExpanded="isExpanded"
 					 let-containerHeight="containerHeight">
-		<div *ngIf="isExpanded"
-			  class="child-table"
-			  [style.height]="containerHeight - 175 + 'px'">
-			<magic-bean-table class="test-table"
+		<!-- <div class="child-table-container"
+			  [style.height]="containerHeight - 175 + 'px'"> -->
+			<magic-bean-table *ngIf="isExpanded"
+									class="child-table"
 									tableName="childTable"
 									[colRequest]="colRequest"
 									[dataRequest]="childrenDataRequest"
 									[actionItems]="childActionItems"
 									(action)="actions($event, 'childTable')"
 									child="true"></magic-bean-table>
-		</div>
+		<!-- </div> -->
 	</ng-template>
 
 </magic-bean-table>

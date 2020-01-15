@@ -9,10 +9,10 @@ import { ITableData } from '../interfaces/table-data.interface';
 
 @Injectable({ providedIn: 'root' })
 export class TableService {
-	public isLoadingResults$ = new BehaviorSubject<{ [tableName: string]: boolean }>(null);
+	private isLoadingResults$ = new BehaviorSubject<{ [tableName: string]: boolean }>(null);
 	private _tableState$ = new Subject<ITableAction>();
 	public tableState$ = this._tableState$.asObservable().pipe(
-		tap(({ tableName }) => this.isLoadingResults$.next({ [tableName]: true })),
+		tap(({ tableName }) => this.shouldLoadTable(tableName, true)),
 		debounceTime(1000),
 	);
 	private _dataSource$ = new BehaviorSubject<{ [tableName: string]: ITableData }>(null);
@@ -33,10 +33,17 @@ export class TableService {
 		this.tableAction('updateRow', payload, tableName);
 	}
 
+	shouldLoadTable(tableName: string, shouldLoad: boolean): void {
+		const tablesLoadingState = this.isLoadingResults$.getValue();
+		console.log('tablesLoadingState', tablesLoadingState)
+		this.isLoadingResults$.next({ ...tablesLoadingState, [tableName]: shouldLoad });
+	}
+
 	isLoading(tableName: string): Observable<boolean> {
 		return this.isLoadingResults$.asObservable().pipe(
 			filter(result => result ? !!Object.keys(result).find(table => table === tableName) : true),
 			map(result => result[tableName]),
+			tap(result => console.log('isLoading method', tableName, result))
 		);
 	}
 
@@ -44,7 +51,7 @@ export class TableService {
 		return this.dataSource$.pipe(
 			filter(result => result ? !!Object.keys(result).find(table => table === tableName) : true),
 			map(result => {
-				this.isLoadingResults$.next({ [tableName]: false });
+				this.shouldLoadTable(tableName, false);
 				return result && result[tableName];
 			})
 		);
@@ -57,10 +64,11 @@ export class TableService {
 	updateData({ key, value, updatedRow }, tableName: string): void {
 		this.dataSource$.pipe(
 			take(1),
-			map(({ [tableName]: { records, count } }) => {
+			map(allTables => {
+				const records = allTables[tableName].records;
 				const index = records.findIndex(record => record[key] === value);
 				records[index] = updatedRow;
-				return { [tableName]: { records, count } };
+				return allTables;
 			})
 		).subscribe(result => this._dataSource$.next(result));
 	}
@@ -72,7 +80,7 @@ export class TableService {
 				columnIDs.push('actions');
 				return { columns, columnIDs }
 			})
-		)
+		);
 	}
 
 	private sendRequest(request: IRequest): Observable<any> {
