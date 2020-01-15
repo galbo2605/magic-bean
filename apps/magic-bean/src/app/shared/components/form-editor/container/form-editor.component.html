@@ -1,0 +1,50 @@
+<h2>Field Properties</h2>
+<form class="form-grid"
+		[formGroup]="formGroup">
+	<magic-bean-form-field *ngFor="let field of fields"
+								  class="field-grid"
+								  [form]="formGroup"
+								  [type]="field.type"
+								  [controlName]="field.controlName"
+								  [placeholder]="field.placeholder"
+								  [required]="field.required"
+								  [min]="field.min"
+								  [max]="field.max"
+								  [step]="field.step"
+								  [hintLabel]="field.hintLabel"
+								  [hintMessage]="field.hintMessage"
+								  [value]="field.value"
+								  [disabled]="field.disabled"
+								  [options]="field.options"></magic-bean-form-field>
+	<magic-bean-button type="submit"
+							 label="Save Field"
+							 color="primary"
+							 styleType="raised"
+							 (btnClick)="onSaveField()"></magic-bean-button>
+</form>
+
+<h2>Created Form</h2>
+<form class="form-grid"
+		[formGroup]="createdFormGroup">
+	<magic-bean-form-field *ngFor="let field of createdFields"
+								  class="field-grid"
+								  [form]="createdFormGroup"
+								  [type]="field.type"
+								  [controlName]="field.controlName"
+								  [placeholder]="field.placeholder"
+								  [required]="field.required"
+								  [min]="field.min"
+								  [max]="field.max"
+								  [step]="field.step"
+								  [hintLabel]="field.hintLabel"
+								  [hintMessage]="field.hintMessage"
+								  [value]="field.value"
+								  [disabled]="field.disabled"
+								  [options]="field.options"
+								  (click)="onFieldClick(field.controlName)"></magic-bean-form-field>
+	<magic-bean-button type="submit"
+							 label="Save"
+							 color="primary"
+							 styleType="raised"
+							 (btnClick)="onCreatedFormSave()"></magic-bean-button>
+</form>

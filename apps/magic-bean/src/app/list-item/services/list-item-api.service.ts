@@ -19,9 +19,8 @@ export class ListItemApiService {
 
 	private baseURI(): string {
 		const protocol = 'http';
-		const host = environment.host;
+		const host = environment.sockethost;
 		const port = '4000';
-		console.log(`${protocol}://${host}:${port}`);
 		return `${protocol}://${host}:${port}`;
 	}
 

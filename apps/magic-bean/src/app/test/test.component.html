@@ -1,5 +1,6 @@
 <div class="test-header">
 	<magic-bean-button class="form-dialog"
+							 styleType="raised"
 							 (btnClick)="actions($event)"
 							 label="Form Dialog"></magic-bean-button>
 	<input type="file"
@@ -8,9 +9,11 @@
 			 (change)="actions({type: 'import', payload: $event})"
 			 multiple="false">
 	<magic-bean-button class="form-dialog"
+							 styleType="raised"
 							 (btnClick)="fileInput.click()"
 							 label="Import"></magic-bean-button>
 	<magic-bean-button class="form-dialog"
+							 styleType="raised"
 							 (btnClick)="actions($event)"
 							 label="Export"></magic-bean-button>
 </div>
@@ -24,17 +27,14 @@
 					 let-row
 					 let-isExpanded="isExpanded"
 					 let-containerHeight="containerHeight">
-		<!-- <div class="child-table-container"
-			  [style.height]="containerHeight - 175 + 'px'"> -->
-			<magic-bean-table *ngIf="isExpanded"
-									class="child-table"
-									tableName="childTable"
-									[colRequest]="colRequest"
-									[dataRequest]="childrenDataRequest"
-									[actionItems]="childActionItems"
-									(action)="actions($event, 'childTable')"
-									child="true"></magic-bean-table>
-		<!-- </div> -->
+		<magic-bean-table *ngIf="isExpanded"
+								class="child-table"
+								tableName="childTable"
+								[colRequest]="colRequest"
+								[dataRequest]="childrenDataRequest"
+								[actionItems]="childActionItems"
+								(action)="actions($event, 'childTable')"
+								child="true"></magic-bean-table>
 	</ng-template>
 
 </magic-bean-table>

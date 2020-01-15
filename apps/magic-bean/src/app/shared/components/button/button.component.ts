@@ -5,11 +5,15 @@ import { IAction } from '../../interfaces/action.interface';
 @Component({
 	selector: 'magic-bean-button',
 	templateUrl: './button.component.html',
-	styleUrls: ['./button.component.css'],
+	styleUrls: ['./button.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ButtonComponent implements OnInit {
+	@Input() type = 'button';
 	@Input() label: string;
+	@Input() disabled: boolean;
+	@Input() styleType: string;
+	@Input() color: string;
 	@Output() btnClick = new Subject<IAction>();
 
 	constructor() { }

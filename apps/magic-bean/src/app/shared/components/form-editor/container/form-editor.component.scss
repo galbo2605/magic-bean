@@ -1,0 +1,15 @@
+:host {
+	width: 100%;
+	display: grid;
+	margin: 2rem 0;
+}
+
+.form-grid {
+	display: grid;
+	grid-gap: 1rem;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+ }
+ 
+ .field-grid {
+	display: grid;
+ }

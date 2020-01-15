@@ -35,7 +35,6 @@ export class TableService {
 
 	shouldLoadTable(tableName: string, shouldLoad: boolean): void {
 		const tablesLoadingState = this.isLoadingResults$.getValue();
-		console.log('tablesLoadingState', tablesLoadingState)
 		this.isLoadingResults$.next({ ...tablesLoadingState, [tableName]: shouldLoad });
 	}
 
@@ -43,7 +42,6 @@ export class TableService {
 		return this.isLoadingResults$.asObservable().pipe(
 			filter(result => result ? !!Object.keys(result).find(table => table === tableName) : true),
 			map(result => result[tableName]),
-			tap(result => console.log('isLoading method', tableName, result))
 		);
 	}
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, ChangeDetectionStrategy,  } from '@angular/core';
+import { Component, OnInit, Inject, ChangeDetectionStrategy, Input,  } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup } from '@angular/forms';
 import { IField } from '../shared/components/form-field/interfaces/field.interface';
@@ -12,7 +12,7 @@ import { clothingFields } from './clothingFields';
 export class TestFormComponent implements OnInit {
 	formGroup: FormGroup = new FormGroup({});
 
-	fields: IField[] = clothingFields;
+	@Input() fields: IField[] = clothingFields;
 	constructor(
 		public dialogRef: MatDialogRef<TestFormComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any) { }

@@ -76,13 +76,15 @@
 			</section>
 		</mat-card-content>
 		<mat-card-actions>
-			<button mat-flat-button
-					  type="submit"
-					  color="primary"
-					  [disabled]="formGroup.invalid || formGroup.untouched || formGroup.pristine"
-					  (click)="onSave()">Save</button>
-			<button mat-flat-button
-					  (click)="onClose()">Close</button>
+			<magic-bean-button type="submit"
+									 styleType="flat"
+									 color="primary"
+									 [disabled]="formGroup.invalid || formGroup.untouched || formGroup.pristine"
+									 (btnClick)="onSave()"
+									 label="Save"></magic-bean-button>
+			<magic-bean-button styleType="flat"
+									 (btnClick)="onClose()"
+									 label="Close"></magic-bean-button>
 		</mat-card-actions>
 	</mat-card>
 </form>

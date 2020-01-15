@@ -8,7 +8,7 @@ export class RequestInterceptor implements HttpInterceptor {
 	constructor() { }
 	intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 		const newRequest = request.clone({
-			url: `${environment.host}${request.url}`
+			url: `${environment.apihost}${request.url}`
 		});
 		return next.handle(newRequest);
 	}

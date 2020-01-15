@@ -1,2 +1,44 @@
-<button mat-raised-button
-		  (click)="outputClick()">{{label}}</button>
+<ng-container [ngSwitch]="styleType">
+	<button *ngSwitchCase="'mini-fab'"
+			  mat-mini-fab
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+	<button *ngSwitchCase="'fab'"
+			  mat-fab
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+	<button *ngSwitchCase="'icon'"
+			  mat-icon-button
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+	<button *ngSwitchCase="'flat'"
+			  mat-flat-button
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+	<button *ngSwitchCase="'stroked'"
+			  mat-stroked-button
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+	<button *ngSwitchCase="'raised'"
+			  mat-raised-button
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+	<button *ngSwitchDefault
+			  mat-button
+			  [type]="type"
+			  [disabled]="disabled"
+			  [color]="color"
+			  (click)="outputClick()">{{label}}</button>
+</ng-container>
