@@ -8,7 +8,7 @@ import { ITodoItem } from '../../interfaces/list-item.interface';
 import { IDispatchAction } from '../../interfaces/dispatch-action.interface';
 
 @Component({
-	selector: 'app-list-item-container',
+	selector: 'magic-bean-list-item-container',
 	templateUrl: './list-item-container.component.html',
 	styleUrls: ['./list-item-container.component.css'],
 	changeDetection: ChangeDetectionStrategy.OnPush

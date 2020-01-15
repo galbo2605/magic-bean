@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiRequestService } from '../shared/services/api-request.service';
 import { IRequest } from '../shared/interfaces/request.interface';
 import { EMethod } from '../shared/enums/method.enum.';
 import { IAction } from '../shared/interfaces/action.interface';
-import { MatDialog, MatBottomSheet, MatBottomSheetRef } from '@angular/material';
+import { MatDialog, MatBottomSheet } from '@angular/material';
 import { take, switchMap } from 'rxjs/operators';
 import { TestFormComponent } from '../test-form/test-form.component';
 import { TableService } from '../shared/components/table/services/table.service';

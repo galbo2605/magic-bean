@@ -21,6 +21,7 @@ export class ListItemApiService {
 		const protocol = 'http';
 		const host = environment.host;
 		const port = '4000';
+		console.log(`${protocol}://${host}:${port}`);
 		return `${protocol}://${host}:${port}`;
 	}
 
