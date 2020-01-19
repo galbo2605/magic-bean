@@ -2,5 +2,6 @@ export enum EFieldType {
 	NUMBER = 'number',
 	TEXT = 'text',
 	DROPDOWN = 'dropdown',
-	EMAIL = 'email'
+	EMAIL = 'email',
+	CHECKBOX = 'checkbox',
 }

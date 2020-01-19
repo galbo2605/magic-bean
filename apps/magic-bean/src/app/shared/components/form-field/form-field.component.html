@@ -1,6 +1,7 @@
-<mat-form-field [hintLabel]="hintLabel">
-	<!-- TYPE SWITCH-CASES -->
-	<ng-container [ngSwitch]="type">
+<!-- TYPE SWITCH-CASES -->
+<ng-container [ngSwitch]="type">
+	<mat-form-field *ngIf="isMatFormField"
+						 [hintLabel]="hintLabel">
 		<!-- NUMBER -->
 		<ng-container *ngSwitchCase="fieldType.NUMBER">
 			<input matInput
@@ -45,8 +46,25 @@
 								[value]="option">{{option}}</mat-option>
 			</mat-select>
 		</ng-container>
+		<mat-hint *ngIf="getHint() as hint"
+					 align="end">{{hint}}</mat-hint>
+		<mat-error *ngIf="control?.invalid">{{getErrorMessage()}}</mat-error>
+		<mat-icon *ngIf="iconPrefix"
+					 matPrefix>{{iconPrefix}}</mat-icon>
+		<mat-icon *ngIf="iconSuffix"
+					 matSuffix>{{iconSuffix}}</mat-icon>
+	</mat-form-field>
+	<!-- CHECKBOX -->
+	<ng-container *ngSwitchCase="fieldType.CHECKBOX">
+		<mat-checkbox #checkbox
+						  [formControlName]="controlName"
+						  [required]="required">{{placeholder}}</mat-checkbox>
+		<mat-hint *ngIf="getHint() as hint"
+					 align="end">{{hint}}</mat-hint>
+		<mat-error *ngIf="control?.invalid">{{getErrorMessage()}}</mat-error>
+		<mat-icon *ngIf="iconPrefix"
+					 matPrefix>{{iconPrefix}}</mat-icon>
+		<mat-icon *ngIf="iconSuffix"
+					 matSuffix>{{iconSuffix}}</mat-icon>
 	</ng-container>
-	<mat-hint *ngIf="getHint() as hint"
-				 align="end">{{hint}}</mat-hint>
-	<mat-error *ngIf="control?.invalid">{{getErrorMessage()}}</mat-error>
-</mat-form-field>
+</ng-container>

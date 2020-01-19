@@ -4,4 +4,6 @@ export interface IFieldOptionals {
 	value?: any;
 	disabled?: boolean;
 	options?: any[];
+	iconPrefix?: string;
+	iconSuffix?: string;
 }

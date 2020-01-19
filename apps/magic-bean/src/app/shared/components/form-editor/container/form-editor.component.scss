@@ -13,3 +13,18 @@
  .field-grid {
 	display: grid;
  }
+ 
+ .created-field-grid {
+	display: grid;
+	grid-template: "createdField deleteBtn" 1fr/1fr;
+ }
+
+ .created-field {
+	 display: grid;
+	 grid-area: createdField;
+ }
+ 
+ .created-field-delete-btn {
+	 grid-area: deleteBtn;
+	 place-self: center;
+ }

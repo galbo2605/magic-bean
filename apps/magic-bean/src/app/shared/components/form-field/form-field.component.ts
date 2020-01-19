@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { FormGroup, Validators, ControlContainer, FormGroupDirective, AbstractControl, FormControl } from '@angular/forms';
 import { TFieldType } from './types/field-type.type';
-import { EFieldType } from './enums/field.-type.enum';
+import { EFieldType } from './enums/field-type.enum';
 
 @Component({
 	selector: 'magic-bean-form-field',
@@ -26,10 +26,14 @@ export class FormFieldComponent implements OnChanges {
 	@Input() hintMessage?: string;
 	@Input() value?: any;
 	@Input() disabled?: boolean;
-	@Input() options: any[];
+	@Input() options?: any[];
+	@Input() iconPrefix?: string;
+	@Input() iconSuffix?: string;
 	readonly fieldType = EFieldType;
 	control: AbstractControl;
 	errorMessage: string;
+
+	isMatFormField: boolean;
 
 	ngOnChanges(): void {
 		this.form.addControl(this.controlName, new FormControl())
@@ -42,6 +46,7 @@ export class FormFieldComponent implements OnChanges {
 		if (this.disabled) {
 			this.control.disable();
 		}
+		this.isMatFormField = !!this.type.match(`${this.fieldType.TEXT}|${this.fieldType.NUMBER}|${this.fieldType.EMAIL}|${this.fieldType.DROPDOWN}`);
 	}
 	private setValidation(): void {
 		const validators = [];

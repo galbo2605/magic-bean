@@ -11,6 +11,7 @@ import { eDistPath } from './enum/dist-path.enum';
 import { TestModule } from './test/test.module';
 import { AmazonClothingItemModule } from './amazon-clothing-item/amazon-clothing-item.module';
 import { AppSubscriber } from './subscribers/app.subscriber';
+import { FormManagementModule } from './form-management/form-management.module';
 
 @Module({
 	imports: [
@@ -21,6 +22,7 @@ import { AppSubscriber } from './subscribers/app.subscriber';
 		ListItemModule,
 		TestModule,
 		AmazonClothingItemModule,
+		FormManagementModule,
 	],
 	controllers: [
 		AppController,

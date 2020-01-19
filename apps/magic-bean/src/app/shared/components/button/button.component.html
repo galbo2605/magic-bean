@@ -16,7 +16,9 @@
 			  [type]="type"
 			  [disabled]="disabled"
 			  [color]="color"
-			  (click)="outputClick()">{{label}}</button>
+			  (click)="outputClick()">
+		<mat-icon>{{label}}</mat-icon>
+	</button>
 	<button *ngSwitchCase="'flat'"
 			  mat-flat-button
 			  [type]="type"

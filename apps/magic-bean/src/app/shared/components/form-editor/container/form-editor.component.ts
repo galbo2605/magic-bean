@@ -1,13 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { IField } from '../../form-field/interfaces/field.interface';
-import { EFieldType } from '../../form-field/enums/field.-type.enum';
+import { EFieldType } from '../../form-field/enums/field-type.enum';
 import { FormGroup } from '@angular/forms';
 import { clothingFields } from '../../../../test-form/clothingFields';
 
 @Component({
 	selector: 'magic-bean-form-editor',
 	templateUrl: './form-editor.component.html',
-	styleUrls: ['./form-editor.component.scss']
+	styleUrls: ['./form-editor.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormEditorComponent implements OnInit {
 	@Input() fields: IField[];
@@ -17,51 +18,80 @@ export class FormEditorComponent implements OnInit {
 
 	ngOnInit(): void {
 		const mandatories: IField[] = [
-			{ type: EFieldType.DROPDOWN, controlName: 'type', placeholder: 'Type', options: [EFieldType.TEXT, EFieldType.NUMBER, EFieldType.EMAIL, EFieldType.DROPDOWN], required: true },
-			{ type: EFieldType.TEXT, controlName: 'controlName', placeholder: 'Field Name', required: true },
-			{ type: EFieldType.TEXT, controlName: 'placeholder', placeholder: 'Placeholder', required: true }
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'formName', placeholder: 'Form Name', required: true },
+			{ formName: 'formEditor', type: EFieldType.DROPDOWN, controlName: 'type', placeholder: 'Type', options: [EFieldType.TEXT, EFieldType.NUMBER, EFieldType.EMAIL, EFieldType.DROPDOWN], required: true },
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'controlName', placeholder: 'Field Name', required: true },
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'placeholder', placeholder: 'Placeholder', required: true }
 		];
 		const validators: IField[] = [
-			{ type: EFieldType.DROPDOWN, controlName: 'required', placeholder: 'Required', options: [true, false], value: null },
-			{ type: EFieldType.NUMBER, controlName: 'min', placeholder: 'Minimum Value', value: null },
-			{ type: EFieldType.NUMBER, controlName: 'max', placeholder: 'Maximum Value', value: null },
-			{ type: EFieldType.NUMBER, controlName: 'step', placeholder: 'Decimal Steps', value: null, hintMessage: 'number of steps in each increase/decrease of the field' }
+			{ formName: 'formEditor', type: EFieldType.CHECKBOX, controlName: 'required', placeholder: 'Required', hintMessage: 'check if this is mandatory' },
+			{ formName: 'formEditor', type: EFieldType.NUMBER, controlName: 'min', placeholder: 'Minimum Value' },
+			{ formName: 'formEditor', type: EFieldType.NUMBER, controlName: 'max', placeholder: 'Maximum Value' },
+			{ formName: 'formEditor', type: EFieldType.NUMBER, controlName: 'step', placeholder: 'Decimal Steps', hintLabel: 'number of steps in each increase/decrease of the field' }
 		];
 		const optionals: IField[] = [
-			{ type: EFieldType.TEXT, controlName: 'hintLabel', placeholder: 'Hint Label', value: null },
-			{ type: EFieldType.TEXT, controlName: 'hintMessage', placeholder: 'Hint Message', value: null },
-			{ type: EFieldType.TEXT, controlName: 'value', placeholder: 'Initial Default Value', value: null },
-			{ type: EFieldType.DROPDOWN, controlName: 'disabled', placeholder: 'Disabled', value: null, options: [true, false], hintMessage: 'disabled/enabled by default' },
-			{ type: EFieldType.TEXT, controlName: 'options', placeholder: 'Dropdown Options', value: null, hintMessage: 'comma seperated values' }
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'hintLabel', placeholder: 'Hint Label' },
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'hintMessage', placeholder: 'Hint Message' },
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'value', placeholder: 'Initial Default Value' },
+			{ formName: 'formEditor', type: EFieldType.CHECKBOX, controlName: 'disabled', placeholder: 'Disabled', hintMessage: 'check to disabled/enabled by default' },
+			{ formName: 'formEditor', type: EFieldType.TEXT, controlName: 'options', placeholder: 'Dropdown Options', hintLabel: 'comma seperated values' }
 		];
-		const editorFields = [].concat(mandatories, validators, optionals);
+		const misc: IField[] = [
+			{ formName: 'formEditor', type: EFieldType.NUMBER, controlName: 'orderPosition', placeholder: 'Order Position', hintLabel: 'position of the field in the form' }
+		];
+
+		const editorFields = [].concat(mandatories, validators, optionals, misc);
 		this.fields = editorFields;
 	}
 
 	onSaveField(): void {
-		const fieldProperties = this.formGroup.value;
-		const foundFieldIndex = this.createdFields.findIndex(field => field.controlName === fieldProperties.controlName);
+		// get field properties
+		const fieldProperties: IField = this.formGroup.value;
+
+		// custom post-creation validation
 		switch (fieldProperties.type) {
 			case EFieldType.DROPDOWN:
-				fieldProperties.options = (<string>fieldProperties.options).split(',');
+				// handle comma seperated values from text field to set options array
+				fieldProperties.options = fieldProperties.options.toString().split(',');
 				break;
 			default:
 				break;
 		}
+
+		// look for a field to update (via UI's controlName field)
+		const foundFieldIndex = this.createdFields.findIndex(field => field.controlName === fieldProperties.controlName);
+
+		// if no order is set
+		if (!fieldProperties.orderPosition) {
+			// set to end of created fields array
+			fieldProperties.orderPosition = this.createdFields.length + 1;
+		}
+
+		// if found field
 		if (foundFieldIndex >= 0) {
+			// updated it
 			this.createdFields[foundFieldIndex] = fieldProperties;
 		} else {
+			// create new
 			this.createdFields.push(fieldProperties);
 		}
+
+		// sort created fields
+		this.createdFields.sort((a, b) => a.orderPosition - b.orderPosition);
 	}
 
-	onFieldClick(controlName: string): void {
-		const fieldProperties = this.createdFields.find(field => field.controlName === controlName);
+	onFieldClick(createdFieldIndex: number): void {
+		this.formGroup.reset();
+		const fieldProperties = this.createdFields[createdFieldIndex];
 		this.formGroup.patchValue(fieldProperties);
 	}
 
 	onCreatedFormSave(): void {
-		console.log(this.createdFormGroup);
+	}
+
+	onDeleteField(createdField: IField): void {
+		console.log('delete field', createdField);
+		this.createdFields = this.createdFields.filter(field => field.controlName !== createdField.controlName);
 	}
 
 }
