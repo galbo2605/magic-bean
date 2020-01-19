@@ -4,7 +4,7 @@ import { TestComponent } from './test/test.component';
 
 const routes: Routes = [
 	{ path: '', component: TestComponent },
-	{ path: 'form-editor', loadChildren: () => import('./shared/components/form-editor/core/form-editor.module').then(m => m.FormEditorModule) },
+	{ path: 'form-management', loadChildren: () => import('./shared/components/form-management/core/form-management.module').then(m => m.FormManagementModule) },
 	{ path: 'todo', loadChildren: () => import('./list-item/core/list-item.module').then(m => m.ListItemModule) }
 ];
 

@@ -12,10 +12,6 @@ export class TestService {
 
 	constructor(private apiReqSVC: ApiRequestService, private tableService: TableService) { }
 
-	private sendRequest(request: IRequest): Observable<any> {
-		return this.apiReqSVC.request(request);
-	}
-
 	getImportRecords(fromDate: Date, toDate: Date): Observable<IAmazonClothingItem[]> {
 		const exportRequest: IRequest = {
 			path: `amazon-clothing-item/export`,
@@ -59,5 +55,9 @@ export class TestService {
 			console.log(res);
 			this.tableService.readRows(null, 'parentTable');
 		});
+	}
+
+	private sendRequest(request: IRequest): Observable<any> {
+		return this.apiReqSVC.request(request);
 	}
 }

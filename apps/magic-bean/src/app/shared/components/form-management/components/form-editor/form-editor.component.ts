@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
-import { IField } from '../../form-field/interfaces/field.interface';
-import { EFieldType } from '../../form-field/enums/field-type.enum';
 import { FormGroup } from '@angular/forms';
-import { clothingFields } from '../../../../test-form/clothingFields';
+import { IField } from '../../interfaces/field.interface';
+import { EFieldType } from '../../enums/field-type.enum';
+import { clothingFields } from '../../../../../test-form/clothingFields';
 
 @Component({
 	selector: 'magic-bean-form-editor',
@@ -90,7 +90,6 @@ export class FormEditorComponent implements OnInit {
 	}
 
 	onDeleteField(createdField: IField): void {
-		console.log('delete field', createdField);
 		this.createdFields = this.createdFields.filter(field => field.controlName !== createdField.controlName);
 	}
 

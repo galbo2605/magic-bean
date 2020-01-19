@@ -11,6 +11,7 @@ import { SharedModule } from './shared/core/shared.module';
 import { TestComponent } from './test/test.component';
 import { RequestInterceptor } from './request.interceptor';
 import { TestFormComponent } from './test-form/test-form.component';
+import { FormManagementModule } from './shared/components/form-management/core/form-management.module';
 
 @NgModule({
 	declarations: [
@@ -24,7 +25,8 @@ import { TestFormComponent } from './test-form/test-form.component';
 		HttpClientModule,
 		ReactiveFormsModule,
 		AppRoutingModule,
-		SharedModule
+		SharedModule,
+		FormManagementModule
 	],
 	providers: [
 		{ provide: HTTP_INTERCEPTORS, useClass: RequestInterceptor, multi: true }

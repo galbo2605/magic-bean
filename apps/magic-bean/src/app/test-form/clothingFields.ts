@@ -1,5 +1,6 @@
-import { EFieldType } from '../shared/components/form-field/enums/field-type.enum';
-import { IField } from '../shared/components/form-field/interfaces/field.interface';
+import { IField } from '../shared/components/form-management/interfaces/field.interface';
+import { EFieldType } from '../shared/components/form-management/enums/field-type.enum';
+
 export const clothingFields: IField[] = [
 	{
 		formName: 'Amazon Clothing',

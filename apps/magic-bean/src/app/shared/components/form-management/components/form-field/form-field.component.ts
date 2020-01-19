@@ -1,7 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { FormGroup, Validators, ControlContainer, FormGroupDirective, AbstractControl, FormControl } from '@angular/forms';
-import { TFieldType } from './types/field-type.type';
-import { EFieldType } from './enums/field-type.enum';
+import { TFieldType } from '../../types/field-type.type';
+import { EFieldType } from '../../enums/field-type.enum';
 
 @Component({
 	selector: 'magic-bean-form-field',
