@@ -26,6 +26,7 @@ const formEditorRoutes: Routes = [
 		FormFieldComponent
 	],
 	exports: [
+		FormManagementComponent,
 		FormEditorComponent,
 		FormFieldComponent
 	]

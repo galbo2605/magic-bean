@@ -57,23 +57,10 @@
 			</ul>
 		</div>
 		<mat-card-content>
-			<section class="form-grid">
-				<magic-bean-form-field *ngFor="let field of fields"
-											  class="field-grid"
-											  [form]="formGroup"
-											  [type]="field.type"
-											  [controlName]="field.controlName"
-											  [placeholder]="field.placeholder"
-											  [required]="field.required"
-											  [min]="field.min"
-											  [max]="field.max"
-											  [step]="field.step"
-											  [hintLabel]="field.hintLabel"
-											  [hintMessage]="field.hintMessage"
-											  [value]="data[field.controlName]"
-											  [disabled]="field.disabled"
-											  [options]="field.options"></magic-bean-form-field>
-			</section>
+			<magic-bean-form-management [formFields]="fields"
+												 [fieldsData]="data"
+												 [editorMode]="false"
+												 (formGroup)="setFormGroup($event)"></magic-bean-form-management>
 		</mat-card-content>
 		<mat-card-actions>
 			<magic-bean-button type="submit"

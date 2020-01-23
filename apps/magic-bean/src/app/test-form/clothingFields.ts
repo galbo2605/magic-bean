@@ -1,7 +1,7 @@
-import { IField } from '../shared/components/form-management/interfaces/field.interface';
 import { EFieldType } from '../shared/components/form-management/enums/field-type.enum';
+import { IForm } from '../shared/components/form-management/interfaces/form.interface';
 
-export const clothingFields: IField[] = [
+export const clothingFields: IForm[] = [
 	{
 		formName: 'Amazon Clothing',
 		type: EFieldType.TEXT, controlName: 'SKU', placeholder: 'Enter your SKU',

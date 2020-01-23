@@ -1,37 +1,11 @@
-<h2>Field Properties</h2>
+<h2>{{ _createdFormGroup?.value?.formName || 'New Form' }}</h2>
 <form class="form-grid"
-		[formGroup]="formGroup">
-	<magic-bean-form-field *ngFor="let field of fields"
-								  class="field-grid"
-								  [form]="formGroup"
-								  [type]="field.type"
-								  [controlName]="field.controlName"
-								  [placeholder]="field.placeholder"
-								  [required]="field.required"
-								  [min]="field.min"
-								  [max]="field.max"
-								  [step]="field.step"
-								  [hintLabel]="field.hintLabel"
-								  [hintMessage]="field.hintMessage"
-								  [value]="field.value"
-								  [disabled]="field.disabled"
-								  [options]="field.options"></magic-bean-form-field>
-	<magic-bean-button type="submit"
-							 label="Save Field"
-							 color="primary"
-							 styleType="raised"
-							 [disabled]="formGroup.invalid || formGroup.untouched || formGroup.pristine"
-							 (btnClick)="onSaveField()"></magic-bean-button>
-</form>
-<mat-divider></mat-divider>
-<h2>{{ formGroup?.value?.formName || 'New Form' }}</h2>
-<form class="form-grid"
-		[formGroup]="createdFormGroup">
+		[formGroup]="_createdFormGroup">
 
-	<ng-container *ngFor="let field of createdFields; index as createdFieldIndex">
+	<ng-container *ngFor="let field of fields; index as fieldIndex">
 		<div class="created-field-grid">
 			<magic-bean-form-field class="created-field"
-										  [form]="createdFormGroup"
+										  [form]="_createdFormGroup"
 										  [type]="field.type"
 										  [controlName]="field.controlName"
 										  [placeholder]="field.placeholder"
@@ -46,8 +20,9 @@
 										  [options]="field.options"
 										  [iconPrefix]="field.iconPrefix"
 										  [iconSuffix]="field.iconSuffix"
-										  (click)="onFieldClick(createdFieldIndex)"></magic-bean-form-field>
-			<magic-bean-button class="created-field-delete-btn"
+										  (click)="onFieldClick(fieldIndex)"></magic-bean-form-field>
+			<magic-bean-button *ngIf="field.removable || editorMode"
+									 class="created-field-delete-btn"
 									 styleType="icon"
 									 color="warn"
 									 label="delete"
@@ -55,9 +30,10 @@
 									 (btnClick)="onDeleteField(field)"></magic-bean-button>
 		</div>
 	</ng-container>
-	<magic-bean-button type="submit"
-							 label="Save Form"
+	<magic-bean-button *ngIf="editorMode"
+							 type="submit"
+							 label="Save"
 							 color="primary"
 							 styleType="raised"
-							 (btnClick)="onCreatedFormSave()"></magic-bean-button>
+							 (btnClick)="onSave()"></magic-bean-button>
 </form>

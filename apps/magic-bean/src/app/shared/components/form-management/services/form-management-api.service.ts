@@ -4,13 +4,13 @@ import { IRequest } from '../../../interfaces/request.interface';
 import { EMethod } from '../../../enums/method.enum.';
 import { Observable } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-import { IField } from '../interfaces/field.interface';
+import { IForm } from '../interfaces/form.interface';
 
 @Injectable({ providedIn: 'root' })
 export class FormManagementAPIService {
 	constructor(private apiRequestSVC: ApiRequestService) { }
 
-	getForms(): Observable<IField[]> {
+	getForms(): Observable<IForm[]> {
 		const getRequest: IRequest = {
 			method: EMethod.GET,
 			path: 'form-management/getAll'
@@ -18,7 +18,7 @@ export class FormManagementAPIService {
 		return this.sendRequest(getRequest);
 	}
 
-	createForm(form: IField): Observable<string> {
+	createForm(form: IForm): Observable<string> {
 		const createRequest: IRequest = {
 			method: EMethod.POST,
 			path: 'form-management/createOne',
@@ -27,7 +27,7 @@ export class FormManagementAPIService {
 		return this.sendRequest(createRequest);
 	}
 
-	updateForm(form: IField): Observable<string> {
+	updateForm(form: IForm): Observable<string> {
 		const updateRequest: IRequest = {
 			method: EMethod.POST,
 			path: 'form-management/updateOne',
@@ -36,7 +36,7 @@ export class FormManagementAPIService {
 		return this.sendRequest(updateRequest);
 	}
 
-	deleteForm(form: IField): Observable<string> {
+	deleteForm(form: IForm): Observable<string> {
 		const updateRequest: IRequest = {
 			method: EMethod.POST,
 			path: 'form-management/deleteOne',

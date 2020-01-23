@@ -1,8 +1,9 @@
 <header>
-	<button (click)="showNav = !showNav"
-			  class="material-icons">
-		{{ showNav ? 'close' : 'menu' }}
-	</button>
+	<magic-bean-button styleType="icon"
+							 (btnClick)="showNav = !showNav"
+							 class="material-icons"
+							 [label]="showNav ? 'close' : 'menu'">
+	</magic-bean-button>
 
 	<!--
 	  The unusual handling of showNav ensures that the nav animations are only
