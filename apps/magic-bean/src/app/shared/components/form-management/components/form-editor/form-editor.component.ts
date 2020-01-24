@@ -12,8 +12,7 @@ import { IField } from '../../interfaces/field.interface';
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormEditorComponent implements AfterViewInit {
-	@Input() fields: IForm[];
-	@Input() editorMode: boolean;
+	@Input() form: IForm;
 	_createdFormGroup: FormGroup = new FormGroup({});
 
 	@Output() fieldProperties = new Subject<IField>();
@@ -28,12 +27,12 @@ export class FormEditorComponent implements AfterViewInit {
 	}
 
 	onFieldClick(fieldIndex: number): void {
-		const fieldProperties = this.fields[fieldIndex];
+		const fieldProperties = this.form.fields[fieldIndex];
 		this.fieldProperties.next(fieldProperties);
 	}
 
-	onDeleteField(createdField: IForm): void {
-		this.fields = this.fields.filter(field => field.controlName !== createdField.controlName);
+	onDeleteField(fieldIndex: number): void {
+		this.form.fields.splice(fieldIndex, 1);
 	}
 
 }

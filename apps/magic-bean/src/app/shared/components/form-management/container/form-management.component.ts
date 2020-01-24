@@ -1,10 +1,12 @@
+import { Component, ChangeDetectionStrategy, Input, Output, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Component, ChangeDetectionStrategy, Input, Output } from '@angular/core';
-import { clothingFields } from '../../../../test-form/clothingFields';
+import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { clothingForm } from '../../../../test-form/clothingForm';
 import { IForm } from '../interfaces/form.interface';
 import { EFieldType } from '../enums/field-type.enum';
-import { editorFields } from './editor-form'
-import { Subject } from 'rxjs';
+import { editorForm } from './editor-form'
+import { IField } from '../interfaces/field.interface';
 
 @Component({
 	selector: 'magic-bean-form-management',
@@ -12,14 +14,20 @@ import { Subject } from 'rxjs';
 	styleUrls: ['./form-management.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormManagementComponent {
-	editorFields: IForm[] = editorFields;
+export class FormManagementComponent implements OnInit {
+	editorForm: IForm = editorForm;
 	editorFormGroup: FormGroup;
-	@Input() editorMode = true;
+	_editorMode: boolean;
 
-	@Input() formFields: IForm[] = clothingFields;
-	@Input() fieldsData: any;
+	@Input() form: IForm = clothingForm;
 	@Output() formGroup = new Subject<FormGroup>();
+
+	constructor(private router: Router) { }
+
+	ngOnInit(): void {
+		this._editorMode = this.router.url.replace('/', '') === 'form-management';
+		this.editorForm.editing = this.form.editing = this.form.removableFields = this._editorMode;
+	}
 
 	getCreatedFormGroup(cFG: FormGroup): void {
 		this.formGroup.next(cFG);
@@ -30,7 +38,7 @@ export class FormManagementComponent {
 			this.editorFormGroup = eFG;
 		} else {
 			// get field properties
-			const fieldProperties: IForm = this.editorFormGroup.value;
+			const fieldProperties: IField = this.editorFormGroup.value;
 
 			// custom post-creation validation
 			switch (fieldProperties.type) {
@@ -43,26 +51,26 @@ export class FormManagementComponent {
 			}
 
 			// look for a field to update (via UI's controlName field)
-			const foundFieldIndex = this.formFields.findIndex(field => field.controlName === fieldProperties.controlName);
+			const foundFieldIndex = this.form.fields.findIndex(field => field.controlName === fieldProperties.controlName);
 
 			// if no order is set
 			if (!fieldProperties.orderPosition) {
 				// set to end of created fields array
-				fieldProperties.orderPosition = this.formFields.length + 1;
+				fieldProperties.orderPosition = this.form.fields.length + 1;
 			}
 
 			// if found field
 			if (foundFieldIndex >= 0) {
 				// updated it
-				this.formFields[foundFieldIndex] = fieldProperties;
+				this.form.fields[foundFieldIndex] = fieldProperties;
 			} else {
 				// create new
-				this.formFields.push(fieldProperties);
+				this.form.fields.push(fieldProperties);
 			}
 
 			// sort created fields
-			this.formFields.sort((a, b) => a.orderPosition - b.orderPosition);
-			console.log(this.formFields);
+			this.form.fields.sort((a, b) => a.orderPosition - b.orderPosition);
+			console.log(this.form.fields);
 		}
 	}
 

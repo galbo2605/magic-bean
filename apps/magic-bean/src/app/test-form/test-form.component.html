@@ -57,9 +57,7 @@
 			</ul>
 		</div>
 		<mat-card-content>
-			<magic-bean-form-management [formFields]="fields"
-												 [fieldsData]="data"
-												 [editorMode]="false"
+			<magic-bean-form-management [form]="form"
 												 (formGroup)="setFormGroup($event)"></magic-bean-form-management>
 		</mat-card-content>
 		<mat-card-actions>

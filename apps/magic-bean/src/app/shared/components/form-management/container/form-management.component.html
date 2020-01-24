@@ -1,9 +1,8 @@
-<ng-container *ngIf="editorMode">
-	<magic-bean-form-editor [fields]="editorFields"
+<ng-container *ngIf="_editorMode">
+	<magic-bean-form-editor [form]="editorForm"
 									(createdFormGroup)="getEditorFormGroup($event)"></magic-bean-form-editor>
 	<mat-divider></mat-divider>
 </ng-container>
-<magic-bean-form-editor [fields]="formFields"
+<magic-bean-form-editor [form]="form"
 								(createdFormGroup)="getCreatedFormGroup($event)"
-								[editorMode]="editorMode"
-								(fieldProperties)="editorMode && editField($event)"></magic-bean-form-editor>
+								(fieldProperties)="_editorMode && editField($event)"></magic-bean-form-editor>

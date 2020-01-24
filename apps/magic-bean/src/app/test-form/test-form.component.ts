@@ -1,7 +1,7 @@
 import { Component, Inject, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup } from '@angular/forms';
-import { clothingFields } from './clothingFields';
+import { clothingForm } from './clothingForm';
 import { IForm } from '../shared/components/form-management/interfaces/form.interface';
 @Component({
 	selector: 'magic-bean-test-form',
@@ -12,7 +12,7 @@ import { IForm } from '../shared/components/form-management/interfaces/form.inte
 export class TestFormComponent {
 	formGroup: FormGroup = new FormGroup({});
 
-	@Input() fields: IForm[] = clothingFields;
+	@Input() form: IForm = clothingForm;
 	constructor(
 		public dialogRef: MatDialogRef<TestFormComponent>,
 		@Inject(MAT_DIALOG_DATA) public data: any) { }

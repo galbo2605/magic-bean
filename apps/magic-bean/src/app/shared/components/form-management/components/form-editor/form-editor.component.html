@@ -1,8 +1,11 @@
-<h2>{{ _createdFormGroup?.value?.formName || 'New Form' }}</h2>
+<ng-container *ngIf="form.editing">
+	<h2 class="form-editor-title">{{ form?.formName }}</h2>
+	<h4 class="form-editor-subtitle">{{ form?.formName === 'Form Editor' ? 'Field Properties' : 'Click a Field to Edit' }}</h4>
+</ng-container>
 <form class="form-grid"
 		[formGroup]="_createdFormGroup">
 
-	<ng-container *ngFor="let field of fields; index as fieldIndex">
+	<ng-container *ngFor="let field of form.fields; index as fieldIndex">
 		<div class="created-field-grid">
 			<magic-bean-form-field class="created-field"
 										  [form]="_createdFormGroup"
@@ -21,19 +24,20 @@
 										  [iconPrefix]="field.iconPrefix"
 										  [iconSuffix]="field.iconSuffix"
 										  (click)="onFieldClick(fieldIndex)"></magic-bean-form-field>
-			<magic-bean-button *ngIf="field.removable || editorMode"
+			<magic-bean-button *ngIf="field.removable || form.removableFields"
 									 class="created-field-delete-btn"
 									 styleType="icon"
 									 color="warn"
 									 label="delete"
 									 matTooltip="delete"
-									 (btnClick)="onDeleteField(field)"></magic-bean-button>
+									 (btnClick)="onDeleteField(fieldIndex)"></magic-bean-button>
 		</div>
 	</ng-container>
-	<magic-bean-button *ngIf="editorMode"
+	<magic-bean-button *ngIf="form.editing"
 							 type="submit"
 							 label="Save"
 							 color="primary"
 							 styleType="raised"
+							 [disabled]="_createdFormGroup.invalid || _createdFormGroup.untouched || _createdFormGroup.pristine"
 							 (btnClick)="onSave()"></magic-bean-button>
 </form>
