@@ -1,32 +1,37 @@
 .form-editor-title {
-	margin-bottom: unset;
+  margin-bottom: unset;
 }
 
 .form-editor-subtitle {
-	margin-top: unset;
+  margin-top: unset;
 }
 
 .form-grid {
-	display: grid;
-	grid-gap: 1rem;
-	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
- }
- 
- .field-grid {
-	display: grid;
- }
- 
- .created-field-grid {
-	display: grid;
-	grid-template: "createdField deleteBtn" 1fr/1fr;
- }
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+}
 
- .created-field {
-	 display: grid;
-	 grid-area: createdField;
- }
- 
- .created-field-delete-btn {
-	 grid-area: deleteBtn;
-	 place-self: center;
- }
+.field-grid {
+  display: grid;
+}
+
+.created-field-grid {
+  display: grid;
+  grid-template: "createdField deleteBtn" 1fr/1fr;
+}
+
+.created-field {
+  display: grid;
+  grid-area: createdField;
+  cursor: pointer;
+}
+
+.created-field-delete-btn {
+  grid-area: deleteBtn;
+  place-self: center;
+}
+
+.highlight-created-field {
+  border: 1px solid #f44336;
+}

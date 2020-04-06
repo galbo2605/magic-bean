@@ -1,3 +1,5 @@
+import { IRequest } from '../../../interfaces/request.interface';
+
 export interface IFieldOptionals {
 	hintLabel?: string;
 	hintMessage?: string;
@@ -6,4 +8,5 @@ export interface IFieldOptionals {
 	options?: any[];
 	iconPrefix?: string;
 	iconSuffix?: string;
+	request?: IRequest;
 }

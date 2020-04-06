@@ -1,6 +1,6 @@
 export interface IFormManagement {
 	UID?: string;
-	FormName: string;
+	name?: string;
 	First_Created?: Date;
 	Last_Updated?: Date;
 }

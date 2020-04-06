@@ -18,31 +18,22 @@ export class FormManagementAPIService {
 		return this.sendRequest(getRequest);
 	}
 
-	createForm(form: IForm): Observable<string> {
-		const createRequest: IRequest = {
+	saveForm(form: IForm): Observable<string> {
+		const saveRequest: IRequest = {
 			method: EMethod.POST,
-			path: 'form-management/createOne',
+			path: 'form-management/saveOne',
 			body: form
 		}
-		return this.sendRequest(createRequest);
-	}
-
-	updateForm(form: IForm): Observable<string> {
-		const updateRequest: IRequest = {
-			method: EMethod.POST,
-			path: 'form-management/updateOne',
-			body: form
-		}
-		return this.sendRequest(updateRequest);
+		return this.sendRequest(saveRequest);
 	}
 
 	deleteForm(form: IForm): Observable<string> {
-		const updateRequest: IRequest = {
+		const deleteRequest: IRequest = {
 			method: EMethod.POST,
 			path: 'form-management/deleteOne',
 			body: form
 		}
-		return this.sendRequest(updateRequest);
+		return this.sendRequest(deleteRequest);
 	}
 
 	private sendRequest(request: IRequest): Observable<any> {

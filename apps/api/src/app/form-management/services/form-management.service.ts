@@ -49,34 +49,26 @@ export class FormManagementService {
 		})
 	}
 
-	async create(FormManagement: IFormManagement): Promise<FormManagementEntity> {
+	async save(FormManagement: IFormManagement): Promise<FormManagementEntity> {
 		try {
-			return await this.FormManagementRepository.save(FormManagement);
+			const foundOne = await this.FormManagementRepository.findOne({
+				name: FormManagement.name
+			});
+			if (foundOne) {
+				return await this.FormManagementRepository.save({ ...foundOne, ...FormManagement });
+			} else {
+				return await this.FormManagementRepository.save(FormManagement);
+			}
 		} catch (error) {
 			throw error;
 		}
-	}
-
-	async update(FormManagement: FormManagementEntity): Promise<string> {
-		const foundOne = await this.FormManagementRepository.findOne({
-			FormName: FormManagement.FormName
-		});
-		for (const key in foundOne) {
-			if (foundOne.hasOwnProperty(key)) {
-				if (key !== 'UID') {
-					foundOne[key] = FormManagement[key];
-				}
-			}
-		}
-		await this.FormManagementRepository.save(foundOne);
-		return 'success';
 	}
 
 	async delete(uid: string): Promise<string> {
 		const itemToDelete = await this.FormManagementRepository.findOne(uid);
 		const deletedChildren = this.FormManagementRepository.deleteMany({
 			$and: [
-				{ FormName: itemToDelete.FormName }
+				{ name: itemToDelete.name }
 			]
 		});
 		const deletedParent = this.FormManagementRepository.remove(itemToDelete);

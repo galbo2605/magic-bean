@@ -8,6 +8,11 @@ export class TestController {
 
 	@Get('cols')
 	getCols(): any[] {
-		return this.testService.getCols();
+		return this.testService.getAmazonCols();
+	}
+	
+	@Get('form-cols')
+	getFormCols(): any[] {
+		return this.testService.getFormCols();
 	}
 }

@@ -2,8 +2,11 @@ import { EFieldType } from '../shared/components/form-management/enums/field-typ
 import { IForm } from '../shared/components/form-management/interfaces/form.interface';
 
 export const clothingForm: IForm = {
-	formName: 'Amazon Clothing',
+	name: 'Amazon Clothing',
 	removableFields: false,
+	subtitle: 'Click a Field to Edit',
+	buttonLabel: 'Save Form',
+	buttonDisabled: false,
 	mode: 'Write',
 	fields: [
 		{

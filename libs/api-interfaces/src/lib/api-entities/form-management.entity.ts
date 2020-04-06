@@ -7,7 +7,31 @@ export class FormManagementEntity {
 	UID: ObjectID;
 
 	@Column()
-	FormName: string = null;
+	name: string = null;
+
+	@Column()
+	fields: any[] = null;
+
+	@Column()
+	editing?: boolean = null;
+
+	@Column()
+	removableFields?: boolean = null;
+
+	@Column()
+	mode?: 'Read' | 'Write' = null;
+
+	@Column()
+	subtitle?: string = null;
+
+	@Column()
+	buttonLabel?: string = null;
+
+	@Column()
+	buttonDisabled?: boolean = null;
+
+	@Column()
+	highlightField?: boolean = null;
 
 	@Column()
 	First_Created: Date = null;

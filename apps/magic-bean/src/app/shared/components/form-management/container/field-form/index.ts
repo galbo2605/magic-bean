@@ -24,9 +24,11 @@ const misc: IField[] = [
 	{ type: EFieldType.NUMBER, controlName: 'orderPosition', placeholder: 'Order Position', hintLabel: 'position of the field in the form' }
 ];
 
-export const editorForm: IForm = {
-	formName: 'Form Editor',
+export default {
+	name: 'Form Editor',
+	subtitle: 'Field Properties',
 	mode: 'Write',
 	removableFields: false,
+	buttonLabel: 'Save Field',
 	fields: [].concat(mandatories, validators, optionals, misc)
-};
+} as IForm;

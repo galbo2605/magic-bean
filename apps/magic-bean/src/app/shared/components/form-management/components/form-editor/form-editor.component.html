@@ -1,6 +1,6 @@
 <ng-container *ngIf="form.editing">
-	<h2 class="form-editor-title">{{ form?.formName }}</h2>
-	<h4 class="form-editor-subtitle">{{ form?.formName === 'Form Editor' ? 'Field Properties' : 'Click a Field to Edit' }}</h4>
+	<h2 class="form-editor-title">{{ form?.name }}</h2>
+	<h4 class="form-editor-subtitle">{{ form?.subtitle }}</h4>
 </ng-container>
 <form class="form-grid"
 		[formGroup]="_createdFormGroup">
@@ -8,6 +8,8 @@
 	<ng-container *ngFor="let field of form.fields; index as fieldIndex">
 		<div class="created-field-grid">
 			<magic-bean-form-field class="created-field"
+										  [class.highlight-created-field]="form.highlightField && _selectedFieldIndex === fieldIndex"
+										  [matTooltip]="form.highlightField ? 'Click to Edit' : ''"
 										  [form]="_createdFormGroup"
 										  [type]="field.type"
 										  [controlName]="field.controlName"
@@ -23,7 +25,8 @@
 										  [options]="field.options"
 										  [iconPrefix]="field.iconPrefix"
 										  [iconSuffix]="field.iconSuffix"
-										  (click)="onFieldClick(fieldIndex)"></magic-bean-form-field>
+										  (click)="onFieldClick(fieldIndex)"
+										  (valueChanges)="fieldValueChange(field.controlName, $event)"></magic-bean-form-field>
 			<magic-bean-button *ngIf="field.removable || form.removableFields"
 									 class="created-field-delete-btn"
 									 styleType="icon"
@@ -35,9 +38,9 @@
 	</ng-container>
 	<magic-bean-button *ngIf="form.editing"
 							 type="submit"
-							 label="Save"
+							 [label]="form?.buttonLabel"
 							 color="primary"
 							 styleType="raised"
-							 [disabled]="_createdFormGroup.invalid || _createdFormGroup.untouched || _createdFormGroup.pristine"
+							 [disabled]="isButtonDisabled()"
 							 (btnClick)="onSave()"></magic-bean-button>
 </form>

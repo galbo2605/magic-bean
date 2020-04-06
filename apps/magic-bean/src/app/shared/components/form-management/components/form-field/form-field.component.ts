@@ -1,19 +1,21 @@
-import { Component, Input, ChangeDetectionStrategy, OnChanges } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnChanges, AfterViewInit, OnDestroy, Output } from '@angular/core';
 import { FormGroup, Validators, ControlContainer, FormGroupDirective, AbstractControl, FormControl } from '@angular/forms';
 import { TFieldType } from '../../types/field-type.type';
 import { EFieldType } from '../../enums/field-type.enum';
+import { takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
 	selector: 'magic-bean-form-field',
 	templateUrl: './form-field.component.html',
 	styleUrls: ['./form-field.component.scss'],
+	changeDetection: ChangeDetectionStrategy.OnPush,
 	viewProviders: [
 		/** gets the form group from the parent component - registering the `formControlName`s */
 		{ provide: ControlContainer, useExisting: FormGroupDirective },
-	],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	]
 })
-export class FormFieldComponent implements OnChanges {
+export class FormFieldComponent implements OnChanges, AfterViewInit, OnDestroy {
 	@Input() form: FormGroup;
 	@Input() type: TFieldType;
 	@Input() controlName: string;
@@ -29,11 +31,14 @@ export class FormFieldComponent implements OnChanges {
 	@Input() options?: any[];
 	@Input() iconPrefix?: string;
 	@Input() iconSuffix?: string;
+	@Output() valueChanges = new Subject<any>();
 	readonly fieldType = EFieldType;
 	control: AbstractControl;
 	errorMessage: string;
 
 	isMatFormField: boolean;
+
+	private componentActive = true;
 
 	ngOnChanges(): void {
 		this.form.addControl(this.controlName, new FormControl())
@@ -48,6 +53,19 @@ export class FormFieldComponent implements OnChanges {
 		}
 		this.isMatFormField = !!this.type.match(`${this.fieldType.TEXT}|${this.fieldType.NUMBER}|${this.fieldType.EMAIL}|${this.fieldType.DROPDOWN}`);
 	}
+
+	ngAfterViewInit(): void {
+		this.control.valueChanges.pipe(
+			takeWhile(() => this.componentActive)
+		).subscribe(value => {
+			this.valueChanges.next(value);
+		});
+	}
+
+	ngOnDestroy(): void {
+		this.componentActive = false;
+	}
+
 	private setValidation(): void {
 		const validators = [];
 		switch (this.type) {

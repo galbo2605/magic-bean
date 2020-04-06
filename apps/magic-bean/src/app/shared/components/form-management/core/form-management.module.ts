@@ -8,9 +8,11 @@ import { SharedModule } from '../../../core/shared.module';
 import { FormManagementComponent } from '../container/form-management.component';
 import { FormEditorComponent } from '../components/form-editor/form-editor.component';
 import { FormFieldComponent } from '../components/form-field/form-field.component';
+import { FormTableComponent } from '../components/form-table/form-table.component';
 
 const formEditorRoutes: Routes = [
-	{ path: '', component: FormManagementComponent }
+	{ path: '', component: FormManagementComponent },
+	{ path: 'table', component: FormTableComponent },
 ];
 
 @NgModule({
@@ -22,11 +24,13 @@ const formEditorRoutes: Routes = [
 	],
 	declarations: [
 		FormManagementComponent,
+		FormTableComponent,
 		FormEditorComponent,
 		FormFieldComponent
 	],
 	exports: [
 		FormManagementComponent,
+		FormTableComponent,
 		FormEditorComponent,
 		FormFieldComponent
 	]

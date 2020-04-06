@@ -10,7 +10,7 @@ interface IResponseWithCount {
 export class FormManagementController {
 	constructor(private FormManagementSVC: FormManagementService) { }
 
-	@Get('findAll')
+	@Get('getAll')
 	async findAll(
 		@Query('column') column: string,
 		@Query('direction') direction: 'asc' | 'desc',
@@ -22,21 +22,15 @@ export class FormManagementController {
 		return { records: FormManagements, count };
 	}
 
-	@Post('createOne')
-	async createOne(@Body() body: any): Promise<FormManagementEntity> {
+	@Post('saveOne')
+	async saveOne(@Body() body: any): Promise<FormManagementEntity> {
 		try {
-			const FormManagement = await this.FormManagementSVC.create(body);
+			const FormManagement = await this.FormManagementSVC.save(body);
 			return FormManagement;
 		} catch (error) {
 			console.log(error);
 			return error;
 		}
-	}
-
-	@Post('updateOne')
-	async updateOne(@Body() body: any): Promise<any> {
-		const message = await this.FormManagementSVC.update(body);
-		return { message };
 	}
 
 	@Post('deleteOne')

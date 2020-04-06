@@ -1,12 +1,18 @@
-import { Component, ChangeDetectionStrategy, Input, Output, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { clothingForm } from '../../../../test-form/clothingForm';
 import { IForm } from '../interfaces/form.interface';
 import { EFieldType } from '../enums/field-type.enum';
-import { editorForm } from './editor-form'
+import fieldForm from './field-form'
 import { IField } from '../interfaces/field.interface';
+import formSelection from './form-selection';
+import newForm from './new-form';
+import { FormManagementAPIService } from '../services/form-management-api.service';
+import { take } from 'rxjs/operators';
+import { IAction } from '../../../interfaces/action.interface';
+import { IFieldValue } from '../interfaces/field-value.interface';
 
 @Component({
 	selector: 'magic-bean-form-management',
@@ -14,26 +20,65 @@ import { IField } from '../interfaces/field.interface';
 	styleUrls: ['./form-management.component.scss'],
 	changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FormManagementComponent implements OnInit {
-	editorForm: IForm = editorForm;
+export class FormManagementComponent implements OnInit, OnDestroy {
+	formSelection: IForm = formSelection;
+	fieldForm: IForm = fieldForm;
 	editorFormGroup: FormGroup;
-	_editorMode: boolean;
 
-	@Input() form: IForm = clothingForm;
+	@Input() form: IForm;
 	@Output() formGroup = new Subject<FormGroup>();
-
-	constructor(private router: Router) { }
+	forms$;
+	constructor(private router: Router, private formManagementAPISVC: FormManagementAPIService) { }
 
 	ngOnInit(): void {
-		this._editorMode = this.router.url.replace('/', '') === 'form-management';
-		this.editorForm.editing = this.form.editing = this.form.removableFields = this._editorMode;
+		this.fieldForm.editing = this.router.url.replace('/', '') === 'form-management';
+		if (this.fieldForm.editing) {
+			this.initFormSelection();
+		}
 	}
 
-	getCreatedFormGroup(cFG: FormGroup): void {
+	ngOnDestroy(): void {
+		if (this.form) {
+			this.form.editing = this.form.removableFields = this.form.highlightField = false;
+		}
+	}
+
+	initFormSelection(cFG?: FormGroup): void {
+		this.forms$ = this.formManagementAPISVC.getForms();
+		if (this.editorFormGroup) {
+			this.editorFormGroup.reset();
+		}
+		switch (cFG && cFG.value.formList) {
+			case 'Amazon Clothing':
+				this.form = clothingForm;
+				break;
+			case 'New Form':
+				this.form = newForm;
+				break;
+		}
+		if (this.form) {
+			this.form.editing = this.form.removableFields = this.form.highlightField = this.fieldForm.editing;
+		}
+	}
+
+	getCreatedFormGroup(action: IAction): void {
+		const { type, payload } = action;
+		const cFG = payload as FormGroup;
 		this.formGroup.next(cFG);
+		switch (type) {
+			case 'view init':
+				break;
+			case 'button click':
+				if (this.form.editing && this.form.buttonLabel === 'Save Form') {
+					console.log(this.form);
+
+					this.formManagementAPISVC.saveForm(this.form).pipe(take(1)).subscribe();
+				}
+				break;
+		}
 	}
 
-	getEditorFormGroup(eFG: FormGroup): void {
+	getFieldFormGroup(eFG: FormGroup): void {
 		if (!this.editorFormGroup) {
 			this.editorFormGroup = eFG;
 		} else {
@@ -71,11 +116,38 @@ export class FormManagementComponent implements OnInit {
 			// sort created fields
 			this.form.fields.sort((a, b) => a.orderPosition - b.orderPosition);
 			console.log(this.form.fields);
+			this.form = { ...this.form };
 		}
 	}
 
 	editField(form: IForm): void {
 		this.editorFormGroup.reset();
 		this.editorFormGroup.patchValue(form);
+	}
+
+	onFormSelectionChanges(fieldValue: IFieldValue): void {
+		switch (fieldValue.fieldName) {
+			case 'formList':
+				if (fieldValue.value === 'New Form') {
+					const formName: IField = {
+						controlName: 'formName',
+						placeholder: 'Form Name',
+						type: EFieldType.TEXT,
+						value: 'New Form',
+						hintLabel: 'The name of your new form!'
+					};
+					this.formSelection.fields.push(formName);
+					this.formSelection.buttonLabel = 'Create Form';
+				} else {
+					this.formSelection.fields.splice(1, 1);
+					newForm.name = 'New Form';
+					this.formSelection.buttonLabel = 'Load Form';
+				}
+				break;
+			case 'formName':
+				newForm.name = fieldValue.value;
+				this.form = { ...this.form, name: fieldValue.value };
+				break;
+		}
 	}
 }
