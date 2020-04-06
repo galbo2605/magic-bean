@@ -1,8 +1,8 @@
 import { Component, Inject, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup } from '@angular/forms';
 import { clothingForm } from './clothingForm';
 import { IForm } from '../shared/components/form-management/interfaces/form.interface';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 @Component({
 	selector: 'magic-bean-test-form',
 	templateUrl: './test-form.component.html',

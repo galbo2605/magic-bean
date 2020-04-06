@@ -2,13 +2,16 @@ import { Component, OnInit, Input, ChangeDetectionStrategy, SimpleChanges, OnCha
 import { ITableColumns } from './interfaces/table-column.interface';
 import { Subject, fromEvent, Observable } from 'rxjs';
 import { IAction } from '../../interfaces/action.interface';
-import { Sort, SortDirection, PageEvent, MatTable } from '@angular/material';
 import { TableService } from './services/table.service';
 import { trigger, state, transition, style, animate } from '@angular/animations';
 import { ITableActionItems } from './interfaces/table-action-items.interfaces';
 import { IRequest } from '../../interfaces/request.interface';
 import { ITableData } from './interfaces/table-data.interface';
 import { takeWhile, filter } from 'rxjs/operators';
+import { MatTable } from '@angular/material/table';
+import { PageEvent } from '@angular/material/paginator';
+import { SortDirection, Sort } from '@angular/material/sort';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop'
 
 @Component({
 	selector: 'magic-bean-table',
@@ -31,7 +34,7 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 	@Input() child: boolean;
 	@Output() action = new Subject<IAction>();
 
-	@ViewChild(MatTable, { static: false }) matTable: MatTable<any>;
+	@ViewChild(MatTable) matTable: MatTable<any>;
 	@ViewChild('filterInput', { static: true }) filterInput: ElementRef;
 	@ContentChild('expandableContent', { static: true }) expandableContentTmpl: TemplateRef<any>;
 
@@ -136,6 +139,11 @@ export class TableComponent implements OnInit, OnChanges, AfterViewInit, OnDestr
 	paginate(page: PageEvent): void {
 		this.page = { ...page };
 		this.tableService.readRows(null, this.tableName);
+	}
+
+	drop(event: CdkDragDrop<string[]>, columns: string[]) {
+		console.log('dragging col event', event)
+		moveItemInArray(columns, event.previousIndex, event.currentIndex);
 	}
 
 	getPath(): string {

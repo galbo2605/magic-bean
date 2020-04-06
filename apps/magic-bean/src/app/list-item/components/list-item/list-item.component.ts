@@ -1,10 +1,10 @@
 import { Component, OnInit, Input, Output, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { MatListOption } from '@angular/material';
 import { Subject } from 'rxjs';
 
 import { ITodoItem } from '../../interfaces/list-item.interface';
 import { IDispatchAction } from '../../interfaces/dispatch-action.interface';
+import { MatListOption } from '@angular/material/list';
 
 @Component({
 	selector: 'app-list-item',

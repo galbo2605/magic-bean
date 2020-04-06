@@ -3,7 +3,6 @@ import { ApiRequestService } from '../shared/services/api-request.service';
 import { IRequest } from '../shared/interfaces/request.interface';
 import { EMethod } from '../shared/enums/method.enum.';
 import { IAction } from '../shared/interfaces/action.interface';
-import { MatDialog, MatBottomSheet } from '@angular/material';
 import { take, switchMap } from 'rxjs/operators';
 import { TestFormComponent } from '../test-form/test-form.component';
 import { TableService } from '../shared/components/table/services/table.service';
@@ -11,6 +10,8 @@ import { ITableActionItems } from '../shared/components/table/interfaces/table-a
 import { SpeardSheetService } from '../shared/services/spreadsheet.service';
 import { TestService } from './services/test.service';
 import { ExportComponent } from '../shared/components/export/export.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MatBottomSheet } from '@angular/material/bottom-sheet';
 
 @Component({
 	selector: 'magic-bean-test',

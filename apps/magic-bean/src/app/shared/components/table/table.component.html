@@ -19,12 +19,16 @@
 						  matSort
 						  multiTemplateDataRows
 						  (matSortChange)="sortColumn($event)"
+ 						  cdkDropList
+ 						  cdkDropListOrientation="horizontal"
+						  (cdkDropListDropped)="drop($event, colRes.columnIDs)"
 						  [style.width]="colRes.columnIDs.length * 150 + 'px'">
 
 				<ng-container *ngFor="let column of colRes.columns"
 								  [matColumnDef]="column.id">
 					<mat-header-cell *matHeaderCellDef
 										  mat-sort-header
+										  cdkDrag
 										  disableClear
 										  sticky
 										  class="custom-table-header"
