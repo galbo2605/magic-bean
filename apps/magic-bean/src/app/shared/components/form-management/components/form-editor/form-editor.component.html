@@ -25,6 +25,7 @@
 										  [options]="field.options"
 										  [iconPrefix]="field.iconPrefix"
 										  [iconSuffix]="field.iconSuffix"
+										  [request]="field.request"
 										  (click)="onFieldClick(fieldIndex)"
 										  (valueChanges)="fieldValueChange(field.controlName, $event)"></magic-bean-form-field>
 			<magic-bean-button *ngIf="field.removable || form.removableFields"

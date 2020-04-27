@@ -33,7 +33,7 @@ export const clothingForm: IForm = {
 			type: EFieldType.DROPDOWN, controlName: 'Item_Type', placeholder: `Choose your Item-Type`,
 			hintLabel: `Category of your item`, hintMessage: `Here's the dropdown arrow ^`, value: `T-Shirt`,
 			required: true,
-			options: [`T-Shirt`, `Tank-Top`, `Hoodie`, `Sweaters`, `Sweatshirts`]
+			options: [{ label: `T-Shirt`, value: `T-Shirt` }, { label: `Tank-Top`, value: `Tank-Top` }, { label: `Hoodie`, value: `Hoodie` }, { label: `Sweaters`, value: `Sweaters` }, { label: `Sweatshirts`, value: `Sweatshirts` }]
 		},
 		{
 			type: EFieldType.NUMBER, controlName: 'Price', placeholder: 'Enter your Price',
@@ -114,7 +114,7 @@ export const clothingForm: IForm = {
 			type: EFieldType.DROPDOWN, controlName: 'Parent_Child', placeholder: 'Is item Parent or Child',
 			hintLabel: `Choose a Parent/Child option`, value: `Parent`,
 			required: true,
-			options: ['Parent', 'Child']
+			options: [{ label: 'Parent', value: 'Parent' }, { label: 'Child', value: 'Child' }]
 		},
 		{
 			type: EFieldType.TEXT, controlName: 'Parent_SKU', placeholder: `Enter your Parent's SKU`,
@@ -125,49 +125,49 @@ export const clothingForm: IForm = {
 			type: EFieldType.DROPDOWN, controlName: 'Relationship', placeholder: `Enter your Item's Relationship`,
 			hintLabel: `If this is a variation of other item types`, value: ``,
 			required: false,
-			options: ['', 'Variation']
+			options: [{ label: '', value: '' }, { label: 'Variation', value: 'Variation' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Variation_Theme', placeholder: `Choose your Variation's Theme`,
 			hintLabel: `The type of this variation (i.e. Sizecolor)`, value: `Sizecolor`,
 			required: true,
-			options: ['', 'Sizecolor']
+			options: [{ label: '', value: '' }, { label: 'Sizecolor', value: 'Sizecolor' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Color', placeholder: `Choose your Color`,
 			hintLabel: `Choose this item's color name`, value: ``,
 			required: false,
-			options: ['Green', 'Irish Green', 'Ash', 'Black', 'Forest Green', 'Navy Blue', 'Orange', 'Royal Blue', 'Sporty Green', 'Maroon', 'Red', 'Safety Orange', 'Kelly Green']
+			options: [{ label: 'Green', value: 'Green' }, { label: 'Irish Green', value: 'Irish Green' }, { label: 'Ash', value: 'Ash' }, { label: 'Black', value: 'Black' }, { label: 'Forest Green', value: 'Forest Green' }, { label: 'Navy Blue', value: 'Navy Blue' }, { label: 'Orange', value: 'Orange' }, { label: 'Royal Blue', value: 'Royal Blue' }, { label: 'Sporty Green', value: 'Sporty Green' }, { label: 'Maroon', value: 'Maroon' }, { label: 'Red', value: 'Red' }, { label: 'Safety Orange', value: 'Safety Orange' }, { label: 'Kelly Green', value: 'Kelly Green' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Color_Map', placeholder: `Choose your Color Map`,
 			hintLabel: `Choose this item's color to map for categories`, value: `Green`,
 			required: true,
-			options: ['Green', 'Multicoloured']
+			options: [{ label: 'Green', value: 'Green' }, { label: 'Multicoloured', value: 'Multicoloured' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Department', placeholder: `Choose your Department`,
 			hintLabel: `Department of your item`, value: 'Womens',
 			required: true,
-			options: ['Womens', 'Mens', 'Childrens', 'Pets']
+			options: [{ label: 'Womens', value: 'Womens' }, { label: 'Mens', value: 'Mens' }, { label: 'Childrens', value: 'Childrens' }, { label: 'Pets', value: 'Pets' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Fabric_Type', placeholder: `Choose your Fabric Type`,
 			hintLabel: `Fabric type of your item`, value: '50% Cotton/50% Polyester',
 			required: true,
-			options: ['50% Cotton/50% Polyester', '100% Cotton', '100% Polyester']
+			options: [{ label: '50% Cotton/50% Polyester', value: '50% Cotton/50% Polyester' }, { label: '100% Cotton', value: '100% Cotton' }, { label: '100% Polyester', value: '100% Polyester' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Size', placeholder: `Choose your Size`,
 			hintLabel: `Size of your item`, value: '',
 			required: false,
-			options: ['', 'S', 'M', 'L', 'XL', '2XL', '3XL', '4XL']
+			options: [{ label: '', value: '' }, { label: 'S', value: 'S' }, { label: 'M', value: 'M' }, { label: 'L', value: 'L' }, { label: 'XL', value: 'XL' }, { label: '2XL', value: '2XL' }, { label: '3XL', value: '3XL' }, { label: '4XL', value: '4XL' }]
 		},
 		{
 			type: EFieldType.DROPDOWN, controlName: 'Size_Map', placeholder: `Choose your Size Map`,
 			hintLabel: `Size map of your item`, value: '',
 			required: false,
-			options: ['', 'Small', 'Medium', 'Large', 'X-Large', 'XX-Large', 'XXX-Large', 'XXXX-Large']
+			options: [{ label: '', value: '' }, { label: 'Small', value: 'Small' }, { label: 'Medium', value: 'Medium' }, { label: 'Large', value: 'Large' }, { label: 'X-Large', value: 'X-Large' }, { label: 'XX-Large', value: 'XX-Large' }, { label: 'XXX-Large', value: 'XXX-Large' }, { label: 'XXXX-Large', value: 'XXXX-Large' }]
 		},
 		{
 			type: EFieldType.TEXT, controlName: 'Shipping_Template', placeholder: `Enter your Shipping-Template's name`,

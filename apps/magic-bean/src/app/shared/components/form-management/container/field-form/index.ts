@@ -3,7 +3,7 @@ import { IField } from '../../interfaces/field.interface';
 import { EFieldType } from '../../enums/field-type.enum';
 
 const mandatories: IField[] = [
-	{ type: EFieldType.DROPDOWN, controlName: 'type', placeholder: 'Type', options: [EFieldType.TEXT, EFieldType.NUMBER, EFieldType.EMAIL, EFieldType.DROPDOWN], required: true },
+	{ type: EFieldType.DROPDOWN, controlName: 'type', placeholder: 'Type', options: [{ label: EFieldType.TEXT, value: EFieldType.TEXT }, { label: EFieldType.NUMBER, value: EFieldType.NUMBER }, { label: EFieldType.EMAIL, value: EFieldType.EMAIL }, { label: EFieldType.DROPDOWN, value: EFieldType.DROPDOWN }], required: true },
 	{ type: EFieldType.TEXT, controlName: 'controlName', placeholder: 'Field Name', required: true },
 	{ type: EFieldType.TEXT, controlName: 'placeholder', placeholder: 'Placeholder', required: true }
 ];

@@ -43,7 +43,7 @@
 							[formControlName]="controlName"
 							[required]="required">
 				<mat-option *ngFor="let option of options"
-								[value]="option">{{option}}</mat-option>
+								[value]="option.value">{{option.label}}</mat-option>
 			</mat-select>
 		</ng-container>
 		<mat-hint *ngIf="getHint() as hint"
@@ -67,4 +67,8 @@
 		<mat-icon *ngIf="iconSuffix"
 					 matSuffix>{{iconSuffix}}</mat-icon>
 	</ng-container>
+</ng-container>
+<ng-container *ngIf="request">
+	<magic-bean-request [request]="request"
+							  (response)="response($event)"></magic-bean-request>
 </ng-container>

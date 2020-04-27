@@ -4,6 +4,7 @@ import { TFieldType } from '../../types/field-type.type';
 import { EFieldType } from '../../enums/field-type.enum';
 import { takeWhile } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { IRequest } from '../../../../interfaces/request.interface';
 
 @Component({
 	selector: 'magic-bean-form-field',
@@ -31,6 +32,7 @@ export class FormFieldComponent implements OnChanges, AfterViewInit, OnDestroy {
 	@Input() options?: any[];
 	@Input() iconPrefix?: string;
 	@Input() iconSuffix?: string;
+	@Input() request?: IRequest;
 	@Output() valueChanges = new Subject<any>();
 	readonly fieldType = EFieldType;
 	control: AbstractControl;
@@ -138,5 +140,10 @@ export class FormFieldComponent implements OnChanges, AfterViewInit, OnDestroy {
 			this.hintMessage = '';
 		}
 		return this.hintMessage;
+	}
+
+	response(value: any): void {
+		console.log('form-field component - response method', value);
+		console.table(value.records);
 	}
 }

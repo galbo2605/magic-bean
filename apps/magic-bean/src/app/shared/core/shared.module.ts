@@ -6,6 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ExportComponent } from '../components/export/export.component';
 import { RotatingCubeComponent } from '../components/rotating-cube/rotating-cube.component';
 import { MaterialModule } from './material.module';
+import { RequestComponent, ResponseComponent } from '../components/request/request.component';
 
 @NgModule({
 	imports: [
@@ -17,13 +18,16 @@ import { MaterialModule } from './material.module';
 		MaterialModule,
 		TableComponent,
 		ButtonComponent,
-		RotatingCubeComponent
+		RotatingCubeComponent,
+		RequestComponent,
 	],
 	declarations: [
 		TableComponent,
 		ButtonComponent,
 		ExportComponent,
-		RotatingCubeComponent
+		RotatingCubeComponent,
+		RequestComponent,
+		ResponseComponent,
 	],
 	entryComponents: [
 		ExportComponent

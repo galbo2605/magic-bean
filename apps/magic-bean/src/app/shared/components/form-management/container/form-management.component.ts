@@ -13,6 +13,7 @@ import { FormManagementAPIService } from '../services/form-management-api.servic
 import { take } from 'rxjs/operators';
 import { IAction } from '../../../interfaces/action.interface';
 import { IFieldValue } from '../interfaces/field-value.interface';
+import { IFieldDropdown } from '../interfaces/field-optionals.interface';
 
 @Component({
 	selector: 'magic-bean-form-management',
@@ -89,7 +90,9 @@ export class FormManagementComponent implements OnInit, OnDestroy {
 			switch (fieldProperties.type) {
 				case EFieldType.DROPDOWN:
 					// handle comma seperated values from text field to set options array
-					fieldProperties.options = fieldProperties.options.toString().split(',');
+					fieldProperties.options = fieldProperties.options.toString().split(',').map(option => {
+						return { label: option, value: option };
+					});
 					break;
 				default:
 					break;
